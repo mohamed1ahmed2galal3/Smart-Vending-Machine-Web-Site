@@ -172,7 +172,7 @@ const OrderSummary = {
         <div class="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" data-item-id="${product._id}">
           <div class="relative shrink-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 h-20 w-20 border border-gray-200 dark:border-gray-700">
             <img alt="${product.name}" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300" 
-                 src="${product.imageUrl || 'https://via.placeholder.com/80'}"
+                 src="${product.image || product.imageUrl || 'https://via.placeholder.com/80'}"
                  onerror="this.src='https://via.placeholder.com/80'"/>
           </div>
           <div class="flex-1 min-w-0">
