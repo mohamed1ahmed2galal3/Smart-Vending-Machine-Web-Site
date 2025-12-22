@@ -56,7 +56,7 @@ tailwind.config = {
 
 <!-- Main -->
 <main class="flex-1 py-14">
-  <div class="max-w-7xl mx-auto px-6 flex flex-col gap-16">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col ">
 
     <!-- Status -->
     <div class="flex justify-center sm:justify-start">
@@ -69,67 +69,69 @@ tailwind.config = {
     </div>
 
     <!-- Hero -->
-    <section class="@container">
-      <div class="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24">
+    <!-- Hero -->
+<section class="@container">
+  <div class="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24">
 
-        <!-- Text -->
-        <div class="flex-1 flex flex-col gap-8 text-center lg:text-left">
-          <div class="flex flex-col gap-6">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
-              Buy Your Favorite Snack in
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-400">
-                Seconds
-              </span>
-            </h1>
-            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Select, pay, and enjoy. No app download required.
-              Scan the QR code, choose your items, and snack away.
-            </p>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-col sm:flex-row items-center gap-4 sm:justify-center lg:justify-start">
-            <a href="HTML/selectproduct.html"
-               class="group flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-[#0d1b12] shadow-lg shadow-primary/25 hover:scale-105 transition w-full sm:w-auto">
-              Start Purchase
-              <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-                arrow_forward
-              </span>
-            </a>
-
-            <a href="HTML/Menu.html"
-               class="flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 px-6 py-4 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition w-full sm:w-auto">
-              View Menu
-            </a>
-          </div>
-
-          <!-- Features -->
-          <div class="flex justify-center lg:justify-start gap-6 text-sm text-gray-500 dark:text-gray-400">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[18px]">credit_card</span>
-              Contactless Pay
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[18px]">bolt</span>
-              Instant Dispense
-            </div>
-          </div>
-        </div>
-
-        <!-- Image -->
-        <div class="flex-1 flex justify-center lg:justify-end relative">
-          <div class="absolute inset-0 m-auto w-[120%] h-[120%] bg-primary/20 blur-[100px] rounded-full -z-10"></div>
-
-          <div class="relative w-full max-w-[500px] aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gray-100 dark:bg-gray-800">
-            <div class="absolute inset-0 bg-cover bg-center"
-                 style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAaZnGN3uSPzlHgBk2JSHiRR1nMybez-d4jxzAhnRY1sTRT1YLrPpb3hD2aplOo7Ls-NPdjDnDDpB_XPRXueDkHOu79xJO33ep9WeG4FSTQS88IDRgzAKrnKy6NZfF-ebMCzAnb39KmNPa8tvI_5K8DqLeMR46bf6i74Y-u9EU_vkW8CzrKDSQpz4JBO0NKMzevGNndLIigbmsC5LccV2AvABJID9lY6-_MwSMSnr4ukCryh-9a82zzN7zROCSt17R6QODwifjFA-u7');">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent"></div>
-          </div>
-        </div>
-
+    <!-- Text -->
+    <div class="flex-1 flex flex-col gap-8 text-center lg:text-left">
+      <div class="flex flex-col gap-6">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
+          Buy Your Favorite Snack in
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-400">
+            Seconds
+          </span>
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          Select, pay, and enjoy. No app download required.
+          Scan the QR code, choose your items, and snack away.
+        </p>
       </div>
-    </section>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row items-center gap-4 sm:justify-center lg:justify-start">
+        <a href="HTML/selectproduct.html"
+           class="group flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-[#0d1b12] shadow-lg shadow-primary/25 hover:scale-105 transition w-full sm:w-auto">
+          Start Purchase
+          <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+            arrow_forward
+          </span>
+        </a>
+
+        <a href="HTML/Menu.html"
+           class="flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 px-6 py-4 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition w-full sm:w-auto">
+          View Menu
+        </a>
+      </div>
+
+      <!-- Features -->
+      <div class="flex justify-center lg:justify-start gap-6 text-sm text-gray-500 dark:text-gray-400">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">credit_card</span>
+          Contactless Pay
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">bolt</span>
+          Instant Dispense
+        </div>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="flex-1 flex justify-center lg:justify-end relative w-full max-w-[500px] sm:max-w-full">
+      <div class="absolute inset-0 m-auto w-[120%] h-[120%] bg-primary/20 blur-[100px] rounded-full -z-10"></div>
+
+      <div class="relative w-full aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gray-100 dark:bg-gray-800">
+        <div class="absolute inset-0 bg-cover bg-center"
+             style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAaZnGN3uSPzlHgBk2JSHiRR1nMybez-d4jxzAhnRY1sTRT1YLrPpb3hD2aplOo7Ls-NPdjDnDDpB_XPRXueDkHOu79xJO33ep9WeG4FSTQS88IDRgzAKrnKy6NZfF-ebMCzAnb39KmNPa8tvI_5K8DqLeMR46bf6i74Y-u9EU_vkW8CzrKDSQpz4JBO0NKMzevGNndLIigbmsC5LccV2AvABJID9lY6-_MwSMSnr4ukCryh-9a82zzN7zROCSt17R6QODwifjFA-u7');">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
   </div>
 </main>
