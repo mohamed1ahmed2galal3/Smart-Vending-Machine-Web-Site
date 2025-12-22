@@ -50,7 +50,7 @@
         </div>
     </header>
 <!-- Main Content -->
-<main class="flex-1 flex flex-col items-center justify-center py-10 px-4">
+<main id="confirmation-content" class="flex-1 flex flex-col items-center justify-center py-10 px-4">
     <div class="w-full max-w-[600px] flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Hero Section -->
         <div class="flex flex-col items-center text-center gap-4">
@@ -59,48 +59,56 @@
             </div>
         <h1 class="text-[32px] font-black leading-tight tracking-tight md:text-4xl dark:text-white">Payment Successful!</h1>
         <p class="text-base font-normal text-[#0d1b12]/70 dark:text-gray-400 max-w-[480px]">
-                Thank you! Your transaction is complete and your refreshing drink is being prepared right now.</p>
+                Thank you! Your order is ready. Use the pickup code below at the machine to collect your items.</p>
         </div>
-        <!-- Dispensing Status (ProgressBar adapted) -->
-        <div class="bg-white dark:bg-white/5 p-6 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-100 dark:border-white/5">
-            <div class="flex justify-between items-end mb-3">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-xl animate-spin">autorenew</span>
-                    <p class="text-base font-medium dark:text-white">Dispensing Item...</p>
-                </div>
-                <p class="text-sm font-bold text-primary">75%</p>
+        
+        <!-- Pickup Code Section -->
+        <div class="bg-white dark:bg-white/5 p-8 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-100 dark:border-white/5 text-center">
+            <p class="text-sm font-medium text-[#0d1b12]/60 dark:text-gray-400 mb-4">Your Pickup Code</p>
+            <div id="pickup-code" class="flex justify-center gap-2 mb-4">
+                <!-- Code digits will be inserted here -->
+                <span class="inline-flex items-center justify-center size-14 sm:size-16 bg-gray-200 text-gray-400 text-2xl sm:text-3xl font-black rounded-xl animate-pulse">-</span>
+                <span class="inline-flex items-center justify-center size-14 sm:size-16 bg-gray-200 text-gray-400 text-2xl sm:text-3xl font-black rounded-xl animate-pulse">-</span>
+                <span class="inline-flex items-center justify-center size-14 sm:size-16 bg-gray-200 text-gray-400 text-2xl sm:text-3xl font-black rounded-xl animate-pulse">-</span>
+                <span class="inline-flex items-center justify-center size-14 sm:size-16 bg-gray-200 text-gray-400 text-2xl sm:text-3xl font-black rounded-xl animate-pulse">-</span>
+                <span class="inline-flex items-center justify-center size-14 sm:size-16 bg-gray-200 text-gray-400 text-2xl sm:text-3xl font-black rounded-xl animate-pulse">-</span>
+                <span class="inline-flex items-center justify-center size-14 sm:size-16 bg-gray-200 text-gray-400 text-2xl sm:text-3xl font-black rounded-xl animate-pulse">-</span>
             </div>
-            <div class="h-3 w-full bg-[#cfe7d7] dark:bg-white/10 rounded-full overflow-hidden">
-                <div class="h-full bg-primary rounded-full transition-all duration-1000 ease-out" style="width: 75%;"></div>
-            </div>
-            <p class="text-sm text-[#4c9a66] dark:text-primary/80 mt-3 font-medium">Please collect your item from the tray below shortly.</p>
-        </div>
-    <!-- Purchased Item Card (Card adapted) -->
-        <div class="bg-white dark:bg-white/5 p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-100 dark:border-white/5">
-            <div class="flex gap-4 md:gap-6 items-center">
-                <div class="w-24 h-24 shrink-0 bg-center bg-no-repeat bg-cover rounded-lg bg-gray-100" data-alt="Close up of a sparkling lemon water bottle with condensation" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuApS_1QLsIK1jC9kWYKt7HED1feF9d-y9C1zdBFZ_kgSZ9a2tgIYcPSC0L6N7Db4QrJp3y6lC7d83udoTVhkkaHEGN9pQBSMcIzYkAbIKGzGFKapRNMaw2aHypW7Ls9fVTOHQfQdJ_2Q2WyA_7Viyi7ST-rRso5zqIdDMJPb5MWF6bkeqcDHeY12AuoeQ5UVjEsRAk1t0NqYzuXcPNtQ1VTJt8YcE3iNIHm-tSnv114ZGStigCNkhYa4mk00_UGZYBQzKwguxOutPNf");'>
-                </div>
-                <div class="flex flex-col flex-1 gap-1">
-                    <div class="flex justify-between items-start w-full">
-                        <p class="text-primary text-xs font-bold uppercase tracking-wider">Order #83921</p>
-                        <span class="bg-[#e7f3eb] dark:bg-white/10 text-[#0d1b12] dark:text-white text-xs px-2 py-1 rounded font-medium">Paid</span>
-                    </div>
-                    <p class="text-lg font-bold leading-tight dark:text-white">Sparkling Lemon Water</p>
-                    <p class="text-[#0d1b12]/60 dark:text-gray-400 text-sm font-normal">500ml • Chilled</p>
-                    <p class="text-[#0d1b12] dark:text-white text-lg font-bold mt-1">$2.50</p>
-                </div>
-            </div>
-        </div>
-    <!-- Actions (SingleButton adapted) -->
-        <div class="flex flex-col gap-4 mt-2">
-            <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-primary hover:bg-green-400 transition-colors text-[#0d1b12] text-base font-bold tracking-[0.015em] shadow-lg shadow-primary/20">
-                <span class="material-symbols-outlined mr-2">home</span>
-                <span class="truncate"><a href="../index.html">Return to Home</a></span>
+            <button id="copy-code-btn" onclick="Confirmation.copyCode()" class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                Copy Code
             </button>
+            <div class="mt-4 pt-4 border-t border-gray-100 dark:border-white/10">
+                <p class="text-xs text-[#0d1b12]/50 dark:text-gray-500">
+                    Code expires in <span id="code-expiry" class="font-bold text-primary">15:00</span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Order Details Card -->
+        <div class="bg-white dark:bg-white/5 p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-100 dark:border-white/5">
+            <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-100 dark:border-white/10">
+                <div>
+                    <p class="text-primary text-xs font-bold uppercase tracking-wider">Order <span id="order-number">#---</span></p>
+                    <p id="order-status" class="text-sm text-[#4c9a66] dark:text-primary/80 font-medium">Paid - Ready for Pickup</p>
+                </div>
+                <span id="order-total" class="text-xl font-bold text-[#0d1b12] dark:text-white">$0.00</span>
+            </div>
+            <div id="order-items" class="space-y-2">
+                <!-- Order items will be inserted here -->
+            </div>
+        </div>
+        
+    <!-- Actions -->
+        <div class="flex flex-col gap-4 mt-2">
+            <a href="../index.html" class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-primary hover:bg-green-400 transition-colors text-[#0d1b12] text-base font-bold tracking-[0.015em] shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined mr-2">home</span>
+                <span class="truncate">Return to Home</span>
+            </a>
             <div class="flex justify-center gap-6 mt-2">
-                <a class="flex items-center gap-1 text-sm font-medium text-[#0d1b12]/60 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
-                <span class="material-symbols-outlined text-[18px]">receipt_long</span>
-                                        View Receipt
+                <a class="flex items-center gap-1 text-sm font-medium text-[#0d1b12]/60 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="selectproduct.html">
+                <span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+                                        Continue Shopping
                                     </a>
                 <a class="flex items-center gap-1 text-sm font-medium text-[#0d1b12]/60 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
                 <span class="material-symbols-outlined text-[18px]">help</span>
@@ -110,5 +118,15 @@
         </div>
     </div>
 </main>
+
+<!-- Scripts -->
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/confirmation.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  Confirmation.init();
+});
+</script>
 </body>
 </html>

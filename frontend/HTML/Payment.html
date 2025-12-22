@@ -74,44 +74,25 @@
 <div class="p-6 border-b border-gray-100 dark:border-gray-800">
 <h2 class="text-xl font-bold leading-tight">Order Summary</h2>
 </div>
-<div class="p-4 flex flex-col gap-2">
-<!-- List Item 1 -->
-<div class="flex items-center gap-4 p-2 rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors">
-<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0 bg-gray-100 dark:bg-gray-800" data-alt="Bottle of sparkling water with condensation" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDP5RMK_7bTCOjbPO9F_BuLu4UmAqsWaf0dUVBTzvH1Qpl9eYUYYOoe0PhvqZ1T88sad9IKCQibFzXdczTuhh2fjCW_Tjf16niSWV6l-aq1HoiH7N_vK0nidDZDQFlInMtxRFHPl2EAxAoTd4uwXE8E_-j9MDSOW_tXTDGEd2qFmr51LXUFq_qKgup9s1lCDyMzhXul5hvZDDGFMAUE3oYHC7lf2zW5ckRGAyQ2HkcUqtVQVpvkd18nksDqXAsQdZFxLRiDtm7Xdfmz");'></div>
-<div class="flex-1 min-w-0">
-<p class="text-base font-semibold truncate">Sparkling Water</p>
-<p class="text-sm text-gray-500 dark:text-gray-400">Lemon Lime</p>
-</div>
-<div class="shrink-0 text-right">
-<p class="text-base font-medium">$2.50</p>
-<p class="text-xs text-gray-400">Qty: 1</p>
-</div>
-</div>
-<!-- List Item 2 -->
-<div class="flex items-center gap-4 p-2 rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors">
-<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0 bg-gray-100 dark:bg-gray-800" data-alt="Chocolate protein bar packaging wrapper" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBh_A0O6RyanEVAFX-8GLSGkgPzoDTmvU7UjeMsDGhRi7eCgxSRipm5d5fgztN0lBP5BHjGrgPNY40g07ywWL3tsfhaNeQVPN-PTH77dwj4sIk5h1udZCZR5-tS-5nrmhkFAxm2cK9m57eOUwcOSIErUi8ETTko297sO-QF8zCND2FU8BSaohyzzk1ln-OKb6Wo78NbWWwY_dKeeIoPyOcv3A_DiOvcW4x0dYaSCbkX_BJKUKoR7sQ-T8YaAy0tbGnR6EvdYkgP8v-d");'></div>
-<div class="flex-1 min-w-0">
-<p class="text-base font-semibold truncate">Protein Bar</p>
-<p class="text-sm text-gray-500 dark:text-gray-400">Chocolate Peanut Butter</p>
-</div>
-<div class="shrink-0 text-right">
-<p class="text-base font-medium">$3.00</p>
-<p class="text-xs text-gray-400">Qty: 1</p>
-</div>
+<div class="p-4 flex flex-col gap-2" id="checkout-items">
+<!-- Items will be loaded dynamically -->
+<div class="p-4 text-center text-gray-500">
+<span class="material-symbols-outlined animate-spin">refresh</span>
+<p class="mt-2">Loading...</p>
 </div>
 </div>
 <div class="p-6 bg-gray-50 dark:bg-[#15251b] border-t border-gray-100 dark:border-gray-800">
 <div class="flex justify-between mb-2 text-sm text-gray-600 dark:text-gray-400">
 <span>Subtotal</span>
-<span>$5.50</span>
+<span id="checkout-subtotal">$0.00</span>
 </div>
 <div class="flex justify-between mb-4 text-sm text-gray-600 dark:text-gray-400">
 <span>Tax (8%)</span>
-<span>$0.44</span>
+<span id="checkout-tax">$0.00</span>
 </div>
 <div class="flex justify-between items-end border-t border-gray-200 dark:border-gray-700 pt-4">
 <span class="font-bold text-lg">Total</span>
-<span class="font-black text-2xl text-primary drop-shadow-sm">$5.94</span>
+<span id="checkout-total" class="font-black text-2xl text-primary drop-shadow-sm">$0.00</span>
 </div>
 </div>
 </div>
@@ -154,23 +135,26 @@
 </label>
 </div>
 <!-- Card Form -->
-<form class="space-y-5" onsubmit="event.preventDefault();">
+<form id="payment-form" class="space-y-5">
+<!-- Error display -->
+<div id="payment-error" class="hidden"></div>
+
 <div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="cardName">Name on Card</label>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-name">Name on Card</label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-gray-400 text-xl">person</span>
 </div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="cardName" placeholder="John Doe" type="text"/>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="card-name" placeholder="John Doe" type="text" required/>
 </div>
 </div>
 <div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="cardNumber">Card Number</label>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-number">Card Number</label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-gray-400 text-xl">credit_card</span>
 </div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="cardNumber" placeholder="0000 0000 0000 0000" type="text"/>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="card-number" placeholder="0000 0000 0000 0000" type="text" required/>
 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-primary text-xl">lock</span>
 </div>
@@ -178,27 +162,27 @@
 </div>
 <div class="grid grid-cols-2 gap-5">
 <div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="expiry">Expiry Date</label>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-expiry">Expiry Date</label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-gray-400 text-xl">calendar_today</span>
 </div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="expiry" placeholder="MM / YY" type="text"/>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="card-expiry" placeholder="MM/YY" type="text" required/>
 </div>
 </div>
 <div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="cvc">CVC / Cvv</label>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-cvv">CVC / CVV</label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-gray-400 text-xl">security</span>
 </div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="cvc" placeholder="•••" type="password"/>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="card-cvv" placeholder="•••" type="password" required/>
 </div>
 </div>
 </div>
 <div class="pt-6">
-<button class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-black bg-primary hover:bg-[#25d660] focus:outline-none focus:ring-4 focus:ring-primary/30 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
-                                    <a href="confirmationpage.html">Pay $5.94</a>
+<button id="submit-payment" class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-black bg-primary hover:bg-[#25d660] focus:outline-none focus:ring-4 focus:ring-primary/30 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
+                                    <span id="pay-btn-text">Pay <span id="pay-amount">$0.00</span></span>
                                     <span class="absolute right-4 inset-y-0 flex items-center opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
 <span class="material-symbols-outlined">arrow_forward</span>
 </span>
@@ -217,4 +201,22 @@
 </div>
 </main>
 </div>
+
+<!-- Scripts -->
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/checkout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  Checkout.init();
+  
+  // Update pay button amount
+  const totals = Cart.calculateTotals();
+  const payAmount = document.getElementById('pay-amount');
+  if (payAmount) {
+    payAmount.textContent = '$' + totals.total.toFixed(2);
+  }
+});
+</script>
 </body></html>
