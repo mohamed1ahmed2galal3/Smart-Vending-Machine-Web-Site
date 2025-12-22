@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Page - SmartVend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2bee6c",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2e21",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom radio logic for payment methods */
+        .peer:checked ~ .payment-card {
+            border-color: #2bee6c;
+            background-color: rgba(43, 238, 108, 0.05);
+            color: #0d1b12;
+        }
+        .peer:checked ~ .payment-card .check-icon {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white overflow-x-hidden antialiased selection:bg-primary selection:text-black">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 bg-surface-light dark:bg-surface-dark px-6 py-4 lg:px-10 shadow-sm z-10">
+<div class="flex items-center gap-4 text-[#0d1b12] dark:text-white">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-3xl">smart_toy</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em]">SmartVend</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<a class="flex items-center gap-2 text-sm font-medium leading-normal text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="selectproduct.html">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                    Back to Selection
+                </a>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-[1200px] mx-auto p-4 md:p-8 lg:p-12">
+<!-- Page Heading -->
+<div class="mb-8 md:mb-12">
+<h1 class="text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em] mb-2">Secure Checkout</h1>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal">Complete your purchase to dispense items instantly.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+<!-- Left Column: Order Summary -->
+<div class="lg:col-span-5 order-2 lg:order-1">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden sticky top-8">
+<div class="p-6 border-b border-gray-100 dark:border-gray-800">
+<h2 class="text-xl font-bold leading-tight">Order Summary</h2>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<!-- List Item 1 -->
+<div class="flex items-center gap-4 p-2 rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0 bg-gray-100 dark:bg-gray-800" data-alt="Bottle of sparkling water with condensation" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDP5RMK_7bTCOjbPO9F_BuLu4UmAqsWaf0dUVBTzvH1Qpl9eYUYYOoe0PhvqZ1T88sad9IKCQibFzXdczTuhh2fjCW_Tjf16niSWV6l-aq1HoiH7N_vK0nidDZDQFlInMtxRFHPl2EAxAoTd4uwXE8E_-j9MDSOW_tXTDGEd2qFmr51LXUFq_qKgup9s1lCDyMzhXul5hvZDDGFMAUE3oYHC7lf2zW5ckRGAyQ2HkcUqtVQVpvkd18nksDqXAsQdZFxLRiDtm7Xdfmz");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-base font-semibold truncate">Sparkling Water</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">Lemon Lime</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-base font-medium">$2.50</p>
+<p class="text-xs text-gray-400">Qty: 1</p>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="flex items-center gap-4 p-2 rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0 bg-gray-100 dark:bg-gray-800" data-alt="Chocolate protein bar packaging wrapper" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBh_A0O6RyanEVAFX-8GLSGkgPzoDTmvU7UjeMsDGhRi7eCgxSRipm5d5fgztN0lBP5BHjGrgPNY40g07ywWL3tsfhaNeQVPN-PTH77dwj4sIk5h1udZCZR5-tS-5nrmhkFAxm2cK9m57eOUwcOSIErUi8ETTko297sO-QF8zCND2FU8BSaohyzzk1ln-OKb6Wo78NbWWwY_dKeeIoPyOcv3A_DiOvcW4x0dYaSCbkX_BJKUKoR7sQ-T8YaAy0tbGnR6EvdYkgP8v-d");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-base font-semibold truncate">Protein Bar</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">Chocolate Peanut Butter</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-base font-medium">$3.00</p>
+<p class="text-xs text-gray-400">Qty: 1</p>
+</div>
+</div>
+</div>
+<div class="p-6 bg-gray-50 dark:bg-[#15251b] border-t border-gray-100 dark:border-gray-800">
+<div class="flex justify-between mb-2 text-sm text-gray-600 dark:text-gray-400">
+<span>Subtotal</span>
+<span>$5.50</span>
+</div>
+<div class="flex justify-between mb-4 text-sm text-gray-600 dark:text-gray-400">
+<span>Tax (8%)</span>
+<span>$0.44</span>
+</div>
+<div class="flex justify-between items-end border-t border-gray-200 dark:border-gray-700 pt-4">
+<span class="font-bold text-lg">Total</span>
+<span class="font-black text-2xl text-primary drop-shadow-sm">$5.94</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Payment Details -->
+<div class="lg:col-span-7 order-1 lg:order-2">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-6 md:p-8">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold">Payment Method</h2>
+<div class="flex gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+<img class="h-6 object-contain" data-alt="Visa Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApE3g-ckQYAPyEfNgA6KTeUQW0tpgpxAhqSnOceKFaYIzTGXt-KLTxGDzNLy4FuPpNwVivI7Oxd6EM-wDQupztqTNIFcyWm4tBQrT3EqDOkwbaF65iSUsaiaaxnlhKHKQ7cPepzKtA83hw8MTMo-MZEGQldmP0UM_OzlFPk5kdvyUnjCFsU2b07iK484-VWEG0zTgB7VFX-0LlYNo9r4WM8OvC6KSXlyLm5nOFGRqDf_jKeRbX3cS5N0B3Hdcx0FgVf00Uh-Q2TPtU"/>
+<img class="h-6 object-contain" data-alt="Mastercard Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr1-aG_Q3XBwVYV6UsN8ROVDS2KITblP97ZFfzVzZTqRHZe0VGW1IU7noYcHCppqozEs-pLI84FijYex-tEoVp3QGdm15mWxL_dOIlElYGCWB8meXMwF9Uzb1kM-38zjK-HaZ7_lcgLNLpJ3r_XpJaLflNGRnjwWhS5h4lMqMGnF3N8rxkqEZ1WKmtoXJEqdjFShYyINSpRc2cB5RSjPs-KBGoPsKcELHnXiWIh6xFug-33mRnxnZVbVDXExK04keyr7jIb1_9zExv"/>
+</div>
+</div>
+<!-- Payment Method Selector -->
+<div class="grid grid-cols-3 gap-3 mb-8">
+<label class="cursor-pointer relative group">
+<input checked="" class="peer sr-only" name="payment_method" type="radio"/>
+<div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24">
+<span class="material-symbols-outlined text-3xl">credit_card</span>
+<span class="text-sm font-medium">Card</span>
+<span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+</div>
+</label>
+<label class="cursor-pointer relative group">
+<input class="peer sr-only" name="payment_method" type="radio"/>
+<div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-3xl">phonelink_ring</span>
+<span class="text-sm font-medium">Wallet</span>
+<span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+</div>
+</label>
+<label class="cursor-pointer relative group">
+<input class="peer sr-only" name="payment_method" type="radio"/>
+<div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-3xl">qr_code_scanner</span>
+<span class="text-sm font-medium">QR Code</span>
+<span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+</div>
+</label>
+</div>
+<!-- Card Form -->
+<form class="space-y-5" onsubmit="event.preventDefault();">
+<div class="space-y-1">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="cardName">Name on Card</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-xl">person</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="cardName" placeholder="John Doe" type="text"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="cardNumber">Card Number</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-xl">credit_card</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="cardNumber" placeholder="0000 0000 0000 0000" type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary text-xl">lock</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-5">
+<div class="space-y-1">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="expiry">Expiry Date</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-xl">calendar_today</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="expiry" placeholder="MM / YY" type="text"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="cvc">CVC / Cvv</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-xl">security</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="cvc" placeholder="•••" type="password"/>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<button class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-black bg-primary hover:bg-[#25d660] focus:outline-none focus:ring-4 focus:ring-primary/30 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
+                                    <a href="confirmationpage.html">Pay $5.94</a>
+                                    <span class="absolute right-4 inset-y-0 flex items-center opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+<span class="material-symbols-outlined">arrow_forward</span>
+</span>
+</button>
+</div>
+</form>
+<div class="mt-6 flex flex-col items-center justify-center gap-2 text-center">
+<div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span>Payments are secure and encrypted.</span>
+</div>
+<p class="text-[10px] text-gray-400 uppercase tracking-wider">Powered by Stripe</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
