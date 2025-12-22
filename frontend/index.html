@@ -40,25 +40,26 @@ tailwind.config = {
 <!-- Header -->
 <header class="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-background-dark/60 backdrop-blur">
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
+    <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
       <div class="size-10 rounded-xl bg-primary/20 text-primary flex items-center justify-center">
         <span class="material-symbols-outlined text-[26px]">local_mall</span>
       </div>
       <h2 class="text-xl font-bold tracking-tight">SmartVend</h2>
-    </div>
+    </a>
 
     <div class="flex items-center gap-3">
+      <!-- Previous Orders Button -->
+      <a href="HTML/orders.html" class="flex items-center gap-2 rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+        <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+        <span class="hidden sm:inline">My Orders</span>
+      </a>
+      
       <!-- Cart Button -->
       <a href="HTML/ordersummarypage.html" class="relative flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-text-main hover:bg-primary/90 transition-colors">
         <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-        <span data-cart-total>$0.00</span>
+        <span data-cart-total>EGP 0.00</span>
         <span data-cart-count class="absolute -top-1 -right-1 size-5 bg-text-main text-white rounded-full text-xs font-bold flex items-center justify-center" style="display: none;">0</span>
       </a>
-      
-      <button class="flex items-center gap-2 rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-        <span class="material-symbols-outlined text-[20px]">support_agent</span>
-        <span class="hidden sm:inline">Help</span>
-      </button>
     </div>
   </div>
 </header>
@@ -106,11 +107,6 @@ tailwind.config = {
             arrow_forward
           </span>
         </a>
-
-        <a href="HTML/Menu.html"
-           class="flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 px-6 py-4 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition w-full sm:w-auto">
-          View Menu
-        </a>
       </div>
 
       <!-- Features -->
@@ -148,7 +144,7 @@ tailwind.config = {
 <!-- Footer -->
 <footer class="mt-auto border-t border-gray-200 dark:border-gray-800 py-10 bg-white/30 dark:bg-background-dark/30">
   <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
-    <p class="text-sm text-gray-500">© 2024 SmartVend Inc. | v1.0.2</p>
+    <p class="text-sm text-gray-500">© 2025 SmartVend Inc. | v1.0.2</p>
     <div class="flex gap-6">
       <a href="#" class="text-sm font-medium hover:text-primary transition">Terms</a>
       <a href="#" class="text-sm font-medium hover:text-primary transition">Privacy</a>

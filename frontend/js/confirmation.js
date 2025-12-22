@@ -59,7 +59,7 @@ const Confirmation = {
     // Display total
     const totalEl = document.getElementById('order-total');
     if (totalEl) {
-      totalEl.textContent = `$${this.orderData.total?.toFixed(2) || '0.00'}`;
+      totalEl.textContent = `EGP ${this.orderData.total?.toFixed(2) || '0.00'}`;
     }
     
     // Display items
@@ -75,7 +75,7 @@ const Confirmation = {
           <div class="flex items-center gap-3 py-2">
             <span class="text-primary font-bold">${item.quantity}x</span>
             <span class="text-text-main dark:text-white">${name}</span>
-            <span class="ml-auto text-text-secondary">$${subtotal.toFixed(2)}</span>
+            <span class="ml-auto text-text-secondary">EGP ${subtotal.toFixed(2)}</span>
           </div>
         `;
       });

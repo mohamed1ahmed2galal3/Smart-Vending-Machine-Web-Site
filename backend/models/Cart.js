@@ -67,19 +67,19 @@ cartSchema.virtual('itemCount').get(function() {
   return this.items.reduce((count, item) => count + item.quantity, 0);
 });
 
-// Virtual for tax (8%)
+// Virtual for tax (no tax)
 cartSchema.virtual('tax').get(function() {
-  return Math.round(this.subtotal * 0.08 * 100) / 100;
+  return 0;
 });
 
 // Virtual for tax rate
 cartSchema.virtual('taxRate').get(function() {
-  return 0.08;
+  return 0;
 });
 
-// Virtual for total
+// Virtual for total (no tax)
 cartSchema.virtual('total').get(function() {
-  return Math.round((this.subtotal + this.tax) * 100) / 100;
+  return this.subtotal;
 });
 
 // Update expiration time on save

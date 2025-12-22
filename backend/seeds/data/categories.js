@@ -8,34 +8,34 @@ const categories = [
     isActive: true
   },
   {
-    name: 'Snacks',
-    slug: 'snacks',
-    icon: '🍫',
-    description: 'Chips, cookies, and more',
+    name: 'Chips & Snacks',
+    slug: 'chips-snacks',
+    icon: '🍟',
+    description: 'Chips, crackers, and savory snacks',
     displayOrder: 2,
     isActive: true
   },
   {
-    name: 'Hot Drinks',
-    slug: 'hot-drinks',
-    icon: '☕',
-    description: 'Coffee and tea options',
+    name: 'Biscuits & Cookies',
+    slug: 'biscuits-cookies',
+    icon: '🍪',
+    description: 'Sweet biscuits and cookies',
     displayOrder: 3,
     isActive: true
   },
   {
-    name: 'Healthy',
-    slug: 'healthy',
-    icon: '🥗',
-    description: 'Health-conscious options',
+    name: 'Chocolate & Candy',
+    slug: 'chocolate-candy',
+    icon: '🍫',
+    description: 'Chocolates and sweets',
     displayOrder: 4,
     isActive: true
   },
   {
-    name: 'Essentials',
-    slug: 'essentials',
-    icon: '🏥',
-    description: 'Daily essentials',
+    name: 'Nuts & Seeds',
+    slug: 'nuts-seeds',
+    icon: '🥜',
+    description: 'Roasted nuts and seeds',
     displayOrder: 5,
     isActive: true
   }

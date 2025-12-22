@@ -139,6 +139,13 @@ const API = {
       return API.request(`/orders/number/${orderNumber}`);
     },
     
+    async getMultiple(orderIds) {
+      return API.request('/orders/multiple', {
+        method: 'POST',
+        body: JSON.stringify({ orderIds })
+      });
+    },
+    
     async getStatus(orderId) {
       return API.request(`/orders/${orderId}/status`);
     },
@@ -146,6 +153,12 @@ const API = {
     async cancel(orderId) {
       return API.request(`/orders/${orderId}/cancel`, {
         method: 'PUT'
+      });
+    },
+    
+    async regenerateCode(orderId) {
+      return API.request(`/orders/${orderId}/regenerate-code`, {
+        method: 'POST'
       });
     }
   },

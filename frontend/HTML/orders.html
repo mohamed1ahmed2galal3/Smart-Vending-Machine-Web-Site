@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Orders - SmartVend</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#2bee6c",
+                    "primary-dark": "#24c95b",
+                    "background-light": "#f6f8f6",
+                    "background-dark": "#102216",
+                    "surface-light": "#ffffff",
+                    "surface-dark": "#1a3322",
+                    "text-main": "#0d1b12",
+                    "text-secondary": "#4c9a66",
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+            },
+        },
+    }
+</script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased min-h-screen flex flex-col transition-colors duration-200">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo -->
+            <a href="../index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div class="text-primary">
+                    <span class="material-symbols-outlined text-3xl">smart_toy</span>
+                </div>
+                <h2 class="text-gray-900 dark:text-white text-xl font-bold tracking-tight">SmartVend</h2>
+            </a>
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <a href="selectproduct.html" class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-lg">arrow_back</span>
+                    Back to Shop
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Page Header -->
+    <div class="flex flex-col gap-1 mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">My Orders</h1>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">View your order history and pickup codes</p>
+    </div>
+
+    <!-- Orders List -->
+    <div id="orders-container" class="space-y-4">
+        <!-- Loading state -->
+        <div id="orders-loading" class="bg-surface-light dark:bg-surface-dark rounded-2xl p-12 text-center border border-gray-200 dark:border-gray-800">
+            <span class="material-symbols-outlined text-[48px] text-primary animate-spin">refresh</span>
+            <p class="mt-4 text-gray-500 dark:text-gray-400">Loading your orders...</p>
+        </div>
+    </div>
+</main>
+
+<!-- Pickup Code Modal -->
+<div id="code-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-surface-light dark:bg-surface-dark rounded-2xl max-w-md w-full p-8 shadow-2xl">
+        <div class="text-center">
+            <div class="size-16 mx-auto rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-primary text-3xl">qr_code</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Your Pickup Code</h3>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Enter this code on the vending machine</p>
+            
+            <div id="modal-code-display" class="flex justify-center gap-2 mb-4">
+                <!-- Code digits will be inserted here -->
+            </div>
+            
+            <button onclick="OrdersPage.copyCode()" class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-4">
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                Copy Code
+            </button>
+            
+            <div id="modal-expiry" class="text-xs text-gray-500 dark:text-gray-400 mb-6"></div>
+            
+            <button onclick="OrdersPage.closeModal()" class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script>
+const OrdersPage = {
+    orders: [],
+    currentCode: '',
+    
+    async init() {
+        await this.loadOrders();
+    },
+    
+    async loadOrders() {
+        const container = document.getElementById('orders-container');
+        const loading = document.getElementById('orders-loading');
+        
+        // Get stored order IDs from localStorage
+        const storedOrderIds = this.getStoredOrderIds();
+        
+        if (storedOrderIds.length === 0) {
+            this.showEmptyState();
+            return;
+        }
+        
+        try {
+            // Fetch orders from backend
+            const response = await API.Orders.getMultiple(storedOrderIds);
+            
+            if (response.success && response.data.length > 0) {
+                this.orders = response.data;
+                this.renderOrders();
+            } else {
+                this.showEmptyState();
+            }
+        } catch (error) {
+            console.error('Error loading orders:', error);
+            this.showError();
+        }
+    },
+    
+    getStoredOrderIds() {
+        try {
+            const stored = localStorage.getItem('smartvend_order_history');
+            return stored ? JSON.parse(stored) : [];
+        } catch (e) {
+            return [];
+        }
+    },
+    
+    renderOrders() {
+        const container = document.getElementById('orders-container');
+        
+        if (this.orders.length === 0) {
+            this.showEmptyState();
+            return;
+        }
+        
+        let html = '';
+        this.orders.forEach(order => {
+            const isDispensed = order.dispensingStatus === 'completed' || order.status === 'completed';
+            const isPaid = order.paymentStatus === 'paid';
+            const isExpired = order.pickupCodeExpiresAt && new Date(order.pickupCodeExpiresAt) < new Date();
+            const canDispense = isPaid && !isDispensed;
+            
+            // Status badge
+            let statusBadge = '';
+            let statusColor = '';
+            if (isDispensed) {
+                statusBadge = 'Dispensed';
+                statusColor = 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+            } else if (isPaid) {
+                statusBadge = 'Ready for Pickup';
+                statusColor = 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+            } else if (order.status === 'cancelled') {
+                statusBadge = 'Cancelled';
+                statusColor = 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400';
+            } else if (order.status === 'failed') {
+                statusBadge = 'Failed';
+                statusColor = 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+            } else {
+                statusBadge = 'Pending';
+                statusColor = 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
+            }
+            
+            // Format date
+            const orderDate = new Date(order.createdAt).toLocaleDateString('en-EG', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Items summary
+            const itemCount = order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+            const itemNames = order.items?.map(item => item.productName).slice(0, 2).join(', ') || '';
+            const moreItems = (order.items?.length || 0) > 2 ? ` +${order.items.length - 2} more` : '';
+            
+            html += `
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+                    <div class="p-6">
+                        <!-- Order Header -->
+                        <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                            <div>
+                                <div class="flex items-center gap-3 mb-1">
+                                    <span class="text-lg font-bold text-gray-900 dark:text-white">Order #${order.orderNumber}</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor}">
+                                        ${statusBadge}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">${orderDate}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xl font-bold text-gray-900 dark:text-white">EGP ${order.total?.toFixed(2) || '0.00'}</span>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">${itemCount} item${itemCount !== 1 ? 's' : ''}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Items Preview -->
+                        <div class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                            ${itemNames}${moreItems}
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex flex-wrap gap-3">
+                            ${canDispense ? `
+                                ${isExpired ? `
+                                    <button onclick="OrdersPage.regenerateCode('${order._id}')" class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-text-main font-bold rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">refresh</span>
+                                        Get New Code
+                                    </button>
+                                ` : `
+                                    <button onclick="OrdersPage.showCode('${order._id}')" class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-text-main font-bold rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">qr_code</span>
+                                        View Pickup Code
+                                    </button>
+                                `}
+                            ` : ''}
+                            ${isDispensed ? `
+                                <div class="flex items-center gap-2 px-4 py-2 text-green-600 dark:text-green-400">
+                                    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                    Items Collected
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    },
+    
+    showEmptyState() {
+        const container = document.getElementById('orders-container');
+        container.innerHTML = `
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-12 text-center border border-gray-200 dark:border-gray-800">
+                <span class="material-symbols-outlined text-[64px] text-gray-300 dark:text-gray-600 mb-4">receipt_long</span>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No orders yet</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">Your order history will appear here</p>
+                <a href="selectproduct.html" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-text-main font-bold py-3 px-6 rounded-xl transition-colors">
+                    Start Shopping
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </a>
+            </div>
+        `;
+    },
+    
+    showError() {
+        const container = document.getElementById('orders-container');
+        container.innerHTML = `
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-12 text-center border border-gray-200 dark:border-gray-800">
+                <span class="material-symbols-outlined text-[64px] text-red-400 mb-4">error</span>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Error loading orders</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">Please try again later</p>
+                <button onclick="OrdersPage.loadOrders()" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-text-main font-bold py-3 px-6 rounded-xl transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">refresh</span>
+                    Retry
+                </button>
+            </div>
+        `;
+    },
+    
+    showCode(orderId) {
+        const order = this.orders.find(o => o._id === orderId);
+        if (!order || !order.pickupCode) return;
+        
+        this.currentCode = order.pickupCode;
+        
+        // Display code digits
+        const codeDisplay = document.getElementById('modal-code-display');
+        let codeHtml = '';
+        for (const digit of order.pickupCode) {
+            codeHtml += `<span class="inline-flex items-center justify-center size-12 sm:size-14 bg-primary/10 dark:bg-primary/20 text-primary text-2xl font-black rounded-xl">${digit}</span>`;
+        }
+        codeDisplay.innerHTML = codeHtml;
+        
+        // Display expiry
+        const expiryEl = document.getElementById('modal-expiry');
+        if (order.pickupCodeExpiresAt) {
+            const expiryDate = new Date(order.pickupCodeExpiresAt);
+            const now = new Date();
+            if (expiryDate > now) {
+                const diffMs = expiryDate - now;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMins / 60);
+                if (diffHours > 0) {
+                    expiryEl.textContent = `Code expires in ${diffHours}h ${diffMins % 60}m`;
+                } else {
+                    expiryEl.textContent = `Code expires in ${diffMins} minutes`;
+                }
+            } else {
+                expiryEl.textContent = 'Code expired - click "Get New Code" to regenerate';
+            }
+        }
+        
+        // Show modal
+        const modal = document.getElementById('code-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    },
+    
+    closeModal() {
+        const modal = document.getElementById('code-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    },
+    
+    copyCode() {
+        if (this.currentCode) {
+            navigator.clipboard.writeText(this.currentCode).then(() => {
+                showToast('Code copied to clipboard!');
+            }).catch(() => {
+                showToast('Failed to copy code', 'error');
+            });
+        }
+    },
+    
+    async regenerateCode(orderId) {
+        try {
+            const response = await API.Orders.regenerateCode(orderId);
+            
+            if (response.success) {
+                // Update local order data
+                const orderIndex = this.orders.findIndex(o => o._id === orderId);
+                if (orderIndex !== -1) {
+                    this.orders[orderIndex].pickupCode = response.data.pickupCode;
+                    this.orders[orderIndex].pickupCodeExpiresAt = response.data.pickupCodeExpiresAt;
+                }
+                
+                // Show the new code
+                this.showCode(orderId);
+                this.renderOrders();
+                showToast('New pickup code generated!');
+            }
+        } catch (error) {
+            console.error('Error regenerating code:', error);
+            showToast(error.message || 'Failed to regenerate code', 'error');
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    OrdersPage.init();
+});
+</script>
+</body>
+</html>

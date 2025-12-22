@@ -89,10 +89,10 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     }
   }
 
-  // Calculate tax and total
-  const taxRate = 0.08;
-  const tax = Math.round(subtotal * taxRate * 100) / 100;
-  const total = Math.round((subtotal + tax) * 100) / 100;
+  // Calculate total (no tax)
+  const taxRate = 0;
+  const tax = 0;
+  const total = subtotal;
 
   // Create order
   const order = await Order.create({
@@ -265,5 +265,85 @@ exports.cancelOrder = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Order cancelled successfully',
     data: order
+  });
+});
+
+/**
+ * @desc    Get multiple orders by IDs
+ * @route   POST /api/v1/orders/multiple
+ * @access  Public
+ */
+exports.getMultipleOrders = asyncHandler(async (req, res, next) => {
+  const { orderIds } = req.body;
+
+  if (!orderIds || !Array.isArray(orderIds) || orderIds.length === 0) {
+    return next(new ErrorResponse('Order IDs array is required', 400));
+  }
+
+  // Limit to prevent abuse
+  const limitedIds = orderIds.slice(0, 50);
+
+  const orders = await Order.find({ _id: { $in: limitedIds } })
+    .sort({ createdAt: -1 })
+    .select('orderNumber pickupCode pickupCodeExpiresAt status paymentStatus dispensingStatus items total createdAt machineId');
+
+  res.status(200).json({
+    success: true,
+    count: orders.length,
+    data: orders
+  });
+});
+
+/**
+ * @desc    Regenerate pickup code for an order
+ * @route   POST /api/v1/orders/:orderId/regenerate-code
+ * @access  Public
+ */
+exports.regeneratePickupCode = asyncHandler(async (req, res, next) => {
+  const order = await Order.findById(req.params.orderId);
+
+  if (!order) {
+    return next(new ErrorResponse('Order not found', 404));
+  }
+
+  // Only allow code regeneration for paid orders that haven't been dispensed
+  if (order.paymentStatus !== 'paid') {
+    return next(new ErrorResponse('Order must be paid to regenerate code', 400));
+  }
+
+  if (order.dispensingStatus === 'completed' || order.status === 'completed') {
+    return next(new ErrorResponse('Order has already been dispensed', 400));
+  }
+
+  // Generate new pickup code
+  const { generatePickupCode } = require('../utils/generateCode');
+  let newCode;
+  let isUnique = false;
+  
+  while (!isUnique) {
+    newCode = generatePickupCode();
+    const existingOrder = await Order.findOne({ 
+      pickupCode: newCode,
+      _id: { $ne: order._id },
+      status: { $nin: ['completed', 'cancelled', 'refunded', 'failed'] }
+    });
+    if (!existingOrder) {
+      isUnique = true;
+    }
+  }
+  
+  order.pickupCode = newCode;
+  order.pickupCodeExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  await order.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Pickup code regenerated successfully',
+    data: {
+      orderId: order._id,
+      orderNumber: order.orderNumber,
+      pickupCode: order.pickupCode,
+      pickupCodeExpiresAt: order.pickupCodeExpiresAt
+    }
   });
 });

@@ -51,7 +51,7 @@ const Products = {
       if (categorySlug && categorySlug !== 'all') {
         response = await API.Products.getByCategory(categorySlug);
       } else {
-        response = await API.Products.getAll();
+        response = await API.Products.getAll({ limit: 100 });
       }
       
       if (response.success) {
@@ -75,11 +75,10 @@ const Products = {
     
     const icons = {
       'Cold Drinks': 'local_drink',
-      'Hot Drinks': 'coffee',
-      'Snacks': 'cookie',
-      'Candy': 'cake',
-      'Healthy Options': 'eco',
-      'Fresh Food': 'restaurant'
+      'Chips & Snacks': 'fastfood',
+      'Biscuits & Cookies': 'cookie',
+      'Chocolate & Candy': 'cake',
+      'Nuts & Seeds': 'energy_savings_leaf'
     };
     
     // Render sidebar categories if exists
@@ -214,7 +213,7 @@ const Products = {
           <div class="flex flex-col flex-1 ${!inStock ? 'grayscale' : ''}">
             <div class="flex justify-between items-start mb-1">
               <h3 class="text-text-main dark:text-white font-bold text-lg leading-tight">${product.name}</h3>
-              <span class="${inStock ? 'text-primary' : 'text-text-secondary'} font-black text-lg">$${product.price.toFixed(2)}</span>
+              <span class="${inStock ? 'text-primary' : 'text-text-secondary'} font-black text-lg">EGP ${product.price.toFixed(2)}</span>
             </div>
             <p class="text-text-secondary text-sm mb-4 line-clamp-1">${product.description || ''}</p>
             <div class="mt-auto flex items-center justify-between gap-3">
@@ -274,7 +273,7 @@ const Products = {
     document.getElementById('modal-product-image').src = product.image || product.imageUrl || 'https://via.placeholder.com/400x400?text=No+Image';
     document.getElementById('modal-product-name').textContent = product.name;
     document.getElementById('modal-product-description').textContent = product.description || 'No description available';
-    document.getElementById('modal-product-price').textContent = `$${product.price.toFixed(2)}`;
+    document.getElementById('modal-product-price').textContent = `EGP ${product.price.toFixed(2)}`;
     document.getElementById('modal-product-stock').textContent = product.stock > 0 ? `${product.stock} in stock` : 'Out of stock';
     document.getElementById('modal-product-stock').className = product.stock > 0 ? 'text-green-600' : 'text-red-500';
     
@@ -348,6 +347,72 @@ const Products = {
         }, 300);
       });
     }
+    
+    // Quick filter chips
+    const filterContainer = document.getElementById('quick-filters');
+    if (filterContainer) {
+      filterContainer.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          const isActive = e.currentTarget.classList.contains('bg-primary');
+          
+          // Remove active state from all chips
+          filterContainer.querySelectorAll('.filter-chip').forEach(c => {
+            c.classList.remove('bg-primary', 'text-text-main', 'font-bold');
+            c.classList.add('bg-[#e7f3eb]', 'dark:bg-card-dark');
+          });
+          
+          if (!isActive) {
+            // Activate this chip
+            e.currentTarget.classList.add('bg-primary', 'text-text-main', 'font-bold');
+            e.currentTarget.classList.remove('bg-[#e7f3eb]', 'dark:bg-card-dark');
+            this.applyQuickFilter(e.currentTarget.dataset.filter);
+          } else {
+            // Deactivate - show all products
+            this.renderProducts();
+          }
+        });
+      });
+    }
+  },
+  
+  /**
+   * Apply quick filter
+   */
+  applyQuickFilter(filterType) {
+    let filtered = [...this.products];
+    
+    switch(filterType) {
+      case 'under-20':
+        filtered = this.products.filter(p => p.price < 20);
+        break;
+      case 'best-seller':
+        filtered = this.products.filter(p => p.isBestSeller);
+        break;
+      case 'local':
+        // Filter for Egyptian/local brands
+        const localKeywords = ['chipsy', 'molto', 'corona', 'borio', 'abu auf', 'egyptian', 'birell', 'leb'];
+        filtered = this.products.filter(p => 
+          localKeywords.some(keyword => 
+            p.name.toLowerCase().includes(keyword) || 
+            (p.tags && p.tags.some(tag => tag.toLowerCase().includes('local')))
+          )
+        );
+        break;
+      case 'chocolate':
+        filtered = this.products.filter(p => 
+          p.name.toLowerCase().includes('chocolate') ||
+          (p.tags && p.tags.some(tag => tag.toLowerCase().includes('chocolate'))) ||
+          (p.category && p.category.slug && p.category.slug.includes('chocolate'))
+        );
+        break;
+      default:
+        filtered = this.products;
+    }
+    
+    const originalProducts = this.products;
+    this.products = filtered;
+    this.renderProducts();
+    this.products = originalProducts;
   },
   
   /**

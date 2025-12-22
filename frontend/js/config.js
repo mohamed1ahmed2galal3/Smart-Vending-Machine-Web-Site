@@ -9,7 +9,7 @@ const CONFIG = {
   DEFAULT_MACHINE_ID: 'VM-4029',
   
   // Tax rate (should match backend)
-  TAX_RATE: 0.08,
+  TAX_RATE: 0,
   
   // Session storage keys
   STORAGE_KEYS: {
@@ -62,10 +62,10 @@ function getSessionId() {
 }
 
 /**
- * Format price to currency string
+ * Format price to currency string (Egyptian Pounds)
  */
 function formatPrice(price) {
-  return '$' + parseFloat(price).toFixed(2);
+  return 'EGP ' + parseFloat(price).toFixed(2);
 }
 
 /**

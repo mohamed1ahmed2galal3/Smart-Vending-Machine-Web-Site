@@ -28,9 +28,9 @@ const Checkout = {
     const totalEl = document.getElementById('checkout-total');
     const itemCountEl = document.getElementById('checkout-item-count');
     
-    if (subtotalEl) subtotalEl.textContent = `$${totals.subtotal.toFixed(2)}`;
-    if (taxEl) taxEl.textContent = `$${totals.tax.toFixed(2)}`;
-    if (totalEl) totalEl.textContent = `$${totals.total.toFixed(2)}`;
+    if (subtotalEl) subtotalEl.textContent = `EGP ${totals.subtotal.toFixed(2)}`;
+    if (taxEl) taxEl.textContent = `EGP ${totals.tax.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `EGP ${totals.total.toFixed(2)}`;
     if (itemCountEl) itemCountEl.textContent = `${totals.itemCount} item${totals.itemCount !== 1 ? 's' : ''}`;
     
     // Render items list
@@ -56,7 +56,7 @@ const Checkout = {
               <p class="font-medium text-sm text-text-main dark:text-white truncate">${product.name}</p>
               <p class="text-xs text-text-secondary">Qty: ${quantity}</p>
             </div>
-            <span class="font-bold text-sm text-text-main dark:text-white">$${(price * quantity).toFixed(2)}</span>
+            <span class="font-bold text-sm text-text-main dark:text-white">EGP ${(price * quantity).toFixed(2)}</span>
           </div>
         `;
       });
@@ -221,6 +221,9 @@ const Checkout = {
         items: order.items
       }));
       
+      // Store order ID in order history for "My Orders" page
+      this.addToOrderHistory(order._id);
+      
       // Clear cart
       await Cart.clear();
       
@@ -261,6 +264,28 @@ const Checkout = {
     const errorDiv = document.getElementById('payment-error');
     if (errorDiv) {
       errorDiv.classList.add('hidden');
+    }
+  },
+  
+  /**
+   * Add order to localStorage history
+   */
+  addToOrderHistory(orderId) {
+    try {
+      const stored = localStorage.getItem('smartvend_order_history');
+      let orderIds = stored ? JSON.parse(stored) : [];
+      
+      // Add to beginning if not already present
+      if (!orderIds.includes(orderId)) {
+        orderIds.unshift(orderId);
+      }
+      
+      // Keep only last 50 orders
+      orderIds = orderIds.slice(0, 50);
+      
+      localStorage.setItem('smartvend_order_history', JSON.stringify(orderIds));
+    } catch (e) {
+      console.error('Failed to save order to history:', e);
     }
   }
 };

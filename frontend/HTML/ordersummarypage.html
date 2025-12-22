@@ -42,29 +42,28 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex items-center justify-between h-16">
 <!-- Logo -->
-<div class="flex items-center gap-3">
+<a href="../index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
 <div class="text-primary">
 <span class="material-symbols-outlined text-3xl">smart_toy</span>
 </div>
 <h2 class="text-gray-900 dark:text-white text-xl font-bold tracking-tight">SmartVend</h2>
-</div>
+</a>
 <!-- Desktop Nav -->
 <div class="hidden md:flex flex-1 justify-end items-center gap-8">
-<nav class="flex items-center gap-6">
-<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Menu</a>
-<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Locations</a>
-<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Support</a>
-</nav>
-<button class="relative flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 text-gray-900 dark:text-white hover:bg-primary hover:text-gray-900 transition-all duration-200 group">
-<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">shopping_cart</span>
-<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-gray-900">3</span>
-</button>
+<a href="orders.html" class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">receipt_long</span>
+                    My Orders
+                </a>
+<a href="selectproduct.html" class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                    Back to Selection
+                </a>
 </div>
 <!-- Mobile Menu Button (Icon only for visual) -->
 <div class="md:hidden flex items-center">
-<button class="text-gray-900 dark:text-white">
-<span class="material-symbols-outlined">menu</span>
-</button>
+<a href="selectproduct.html" class="text-gray-900 dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</a>
 </div>
 </div>
 </div>
@@ -99,17 +98,17 @@
 <!-- Line Items -->
 <div class="flex justify-between items-center text-sm">
 <span class="text-gray-500 dark:text-gray-400">Subtotal (<span id="summary-item-count">0</span> items)</span>
-<span id="summary-subtotal" class="font-medium text-gray-900 dark:text-white">$0.00</span>
+<span id="summary-subtotal" class="font-medium text-gray-900 dark:text-white">EGP 0.00</span>
 </div>
 <div class="flex justify-between items-center text-sm">
 <span class="text-gray-500 dark:text-gray-400">Tax (8%)</span>
-<span id="summary-tax" class="font-medium text-gray-900 dark:text-white">$0.00</span>
+<span id="summary-tax" class="font-medium text-gray-900 dark:text-white">EGP 0.00</span>
 </div>
 <div class="my-2 h-px bg-gray-200 dark:bg-gray-700 w-full"></div>
 <!-- Total -->
 <div class="flex justify-between items-center mb-6">
 <span class="text-lg font-bold text-gray-900 dark:text-white">Total Due</span>
-<span id="summary-total" class="text-2xl font-bold text-gray-900 dark:text-white">$0.00</span>
+<span id="summary-total" class="text-2xl font-bold text-gray-900 dark:text-white">EGP 0.00</span>
 </div>
 <!-- CTA Button -->
 <a href="Payment.html" id="checkout-btn" class="w-full bg-primary hover:bg-primary-dark text-gray-900 font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-200 flex items-center justify-center gap-2 group">
@@ -180,12 +179,12 @@ const OrderSummary = {
             <h3 class="text-base font-semibold text-gray-900 dark:text-white truncate">${product.name}</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${product.description || ''}</p>
             <div class="flex items-center gap-2 mt-2 sm:hidden">
-              <span class="text-primary font-medium">$${product.price.toFixed(2)}</span>
+              <span class="text-primary font-medium">EGP ${product.price.toFixed(2)}</span>
               <span class="text-gray-400 text-xs">each</span>
             </div>
           </div>
           <div class="hidden sm:flex flex-col items-end mr-4">
-            <span class="text-base font-semibold text-gray-900 dark:text-white">$${product.price.toFixed(2)}</span>
+            <span class="text-base font-semibold text-gray-900 dark:text-white">EGP ${product.price.toFixed(2)}</span>
             <span class="text-xs text-gray-500 dark:text-gray-400">per unit</span>
           </div>
           <div class="flex items-center gap-3 bg-gray-50 dark:bg-black/20 rounded-full p-1 border border-gray-200 dark:border-gray-700">
@@ -211,9 +210,9 @@ const OrderSummary = {
     const totals = Cart.calculateTotals();
     
     document.getElementById('summary-item-count').textContent = totals.itemCount;
-    document.getElementById('summary-subtotal').textContent = '$' + totals.subtotal.toFixed(2);
-    document.getElementById('summary-tax').textContent = '$' + totals.tax.toFixed(2);
-    document.getElementById('summary-total').textContent = '$' + totals.total.toFixed(2);
+    document.getElementById('summary-subtotal').textContent = 'EGP ' + totals.subtotal.toFixed(2);
+    document.getElementById('summary-tax').textContent = 'EGP ' + totals.tax.toFixed(2);
+    document.getElementById('summary-total').textContent = 'EGP ' + totals.total.toFixed(2);
   },
   
   async updateQuantity(productId, quantity) {
