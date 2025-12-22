@@ -14,6 +14,10 @@ const Checkout = {
     this.loadOrderSummary();
     this.setupPaymentForm();
   },
+
+  getSelectedPaymentMethod() {
+    return document.querySelector('input[name="payment_method"]:checked')?.value || 'card';
+  },
   
   /**
    * Load order summary from cart
@@ -131,44 +135,102 @@ const Checkout = {
       e.preventDefault();
       this.processPayment();
     });
+
+    // Payment method toggle logic
+    const pmRadios = document.querySelectorAll('input[name="payment_method"]');
+    pmRadios.forEach(r => r.addEventListener('change', () => this.updatePaymentMethodUI()));
+
+    // Initialize UI based on default selection
+    this.updatePaymentMethodUI();
+  },
+
+  updatePaymentMethodUI() {
+    const method = this.getSelectedPaymentMethod();
+    const cardFields = document.getElementById('card-fields');
+    const walletFields = document.getElementById('wallet-fields');
+
+    if (cardFields && walletFields) {
+      if (method === 'wallet') {
+        cardFields.classList.add('hidden');
+        // remove required attrs from card inputs
+        document.getElementById('card-name').required = false;
+        document.getElementById('card-number').required = false;
+        document.getElementById('card-expiry').required = false;
+        document.getElementById('card-cvv').required = false;
+
+        walletFields.classList.remove('hidden');
+        document.getElementById('wallet-name').required = true;
+        document.getElementById('wallet-phone').required = true;
+        document.getElementById('wallet-provider').required = true;
+      } else {
+        walletFields.classList.add('hidden');
+        document.getElementById('wallet-name').required = false;
+        document.getElementById('wallet-phone').required = false;
+        document.getElementById('wallet-provider').required = false;
+
+        cardFields.classList.remove('hidden');
+        document.getElementById('card-name').required = true;
+        document.getElementById('card-number').required = true;
+        document.getElementById('card-expiry').required = true;
+        document.getElementById('card-cvv').required = true;
+      }
+    }
   },
   
   /**
    * Validate payment form
    */
   validateForm() {
-    const cardNumber = document.getElementById('card-number')?.value.replace(/\s/g, '');
-    const expiry = document.getElementById('card-expiry')?.value;
-    const cvv = document.getElementById('card-cvv')?.value;
-    const name = document.getElementById('card-name')?.value;
-    
+    const method = this.getSelectedPaymentMethod();
     const errors = [];
-    
-    if (!cardNumber || cardNumber.length < 13) {
-      errors.push('Please enter a valid card number');
-    }
-    
-    if (!expiry || !/^\d{2}\/\d{2}$/.test(expiry)) {
-      errors.push('Please enter a valid expiry date (MM/YY)');
-    } else {
-      const [month, year] = expiry.split('/');
-      const now = new Date();
-      const currentYear = now.getFullYear() % 100;
-      const currentMonth = now.getMonth() + 1;
-      
-      if (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
-        errors.push('Card has expired');
+
+    if (method === 'card') {
+      const cardNumber = document.getElementById('card-number')?.value.replace(/\s/g, '');
+      const expiry = document.getElementById('card-expiry')?.value;
+      const cvv = document.getElementById('card-cvv')?.value;
+      const name = document.getElementById('card-name')?.value;
+
+      if (!cardNumber || cardNumber.length < 13) {
+        errors.push('Please enter a valid card number');
+      }
+
+      if (!expiry || !/^\d{2}\/\d{2}$/.test(expiry)) {
+        errors.push('Please enter a valid expiry date (MM/YY)');
+      } else {
+        const [month, year] = expiry.split('/');
+        const now = new Date();
+        const currentYear = now.getFullYear() % 100;
+        const currentMonth = now.getMonth() + 1;
+
+        if (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+          errors.push('Card has expired');
+        }
+      }
+
+      if (!cvv || cvv.length < 3) {
+        errors.push('Please enter a valid CVV');
+      }
+
+      if (!name || name.trim().length < 2) {
+        errors.push('Please enter the cardholder name');
+      }
+    } else if (method === 'wallet') {
+      const wname = document.getElementById('wallet-name')?.value;
+      const wphone = document.getElementById('wallet-phone')?.value;
+      const wprov = document.getElementById('wallet-provider')?.value;
+
+      if (!wname || wname.trim().length < 2) {
+        errors.push('Please enter the wallet holder name');
+      }
+
+      if (!wphone || !/\d{7,15}/.test(wphone.replace(/\D/g, ''))) {
+        errors.push('Please enter a valid phone number');
+      }
+
+      if (!wprov) {
+        errors.push('Please select a wallet provider');
       }
     }
-    
-    if (!cvv || cvv.length < 3) {
-      errors.push('Please enter a valid CVV');
-    }
-    
-    if (!name || name.trim().length < 2) {
-      errors.push('Please enter the cardholder name');
-    }
-    
     return errors;
   },
   
@@ -177,7 +239,7 @@ const Checkout = {
    */
   async processPayment() {
     const errors = this.validateForm();
-    
+
     if (errors.length > 0) {
       this.showError(errors.join('<br>'));
       return;
@@ -200,13 +262,30 @@ const Checkout = {
       }
       
       const order = orderResponse.data;
-      
-      // Process payment (simulated for now since we're not using real Stripe)
-      // In production, you would integrate with Stripe Elements here
-      const paymentResponse = await API.Payments.process(order._id, {
-        paymentMethodId: 'pm_card_visa', // Simulated payment method
-        amount: order.total
-      });
+      // Determine selected method and send appropriate payment payload
+      const method = this.getSelectedPaymentMethod();
+      let paymentPayload = { amount: order.total };
+
+      if (method === 'card') {
+        // minimal card details (simulated)
+        paymentPayload.paymentMethodId = 'pm_card_visa';
+        paymentPayload.card = {
+          name: document.getElementById('card-name')?.value,
+          number: document.getElementById('card-number')?.value.replace(/\s/g, ''),
+          expiry: document.getElementById('card-expiry')?.value,
+        };
+        paymentPayload.method = 'card';
+      } else if (method === 'wallet') {
+        paymentPayload.method = 'wallet';
+        paymentPayload.wallet = {
+          name: document.getElementById('wallet-name')?.value,
+          phone: document.getElementById('wallet-phone')?.value,
+          provider: document.getElementById('wallet-provider')?.value,
+        };
+      }
+
+      // Process payment (simulated)
+      const paymentResponse = await API.Payments.process(order._id, paymentPayload);
       
       if (!paymentResponse.success) {
         throw new Error(paymentResponse.message || 'Payment failed');

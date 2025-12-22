@@ -108,85 +108,111 @@
 </div>
 </div>
 <!-- Payment Method Selector -->
-<div class="grid grid-cols-3 gap-3 mb-8">
-<label class="cursor-pointer relative group">
-<input checked="" class="peer sr-only" name="payment_method" type="radio"/>
-<div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24">
-<span class="material-symbols-outlined text-3xl">credit_card</span>
-<span class="text-sm font-medium">Card</span>
-<span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
-</div>
-</label>
-<label class="cursor-pointer relative group">
-<input class="peer sr-only" name="payment_method" type="radio"/>
-<div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
-<span class="material-symbols-outlined text-3xl">phonelink_ring</span>
-<span class="text-sm font-medium">Wallet</span>
-<span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
-</div>
-</label>
-<label class="cursor-pointer relative group">
-<input class="peer sr-only" name="payment_method" type="radio"/>
-<div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
-<span class="material-symbols-outlined text-3xl">qr_code_scanner</span>
-<span class="text-sm font-medium">QR Code</span>
-<span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
-</div>
-</label>
+<div class="grid grid-cols-2 gap-3 mb-8">
+    <label class="cursor-pointer relative group">
+        <input checked class="peer sr-only" name="payment_method" type="radio" value="card" id="pm-card" />
+        <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24">
+            <span class="material-symbols-outlined text-3xl">credit_card</span>
+            <span class="text-sm font-medium">Card</span>
+            <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+        </div>
+    </label>
+    <label class="cursor-pointer relative group">
+        <input class="peer sr-only" name="payment_method" type="radio" value="wallet" id="pm-wallet" />
+        <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
+            <span class="material-symbols-outlined text-3xl">phonelink_ring</span>
+            <span class="text-sm font-medium">Wallet</span>
+            <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+        </div>
+    </label>
 </div>
 <!-- Card Form -->
 <form id="payment-form" class="space-y-5">
 <!-- Error display -->
 <div id="payment-error" class="hidden"></div>
 
-<div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-name">Name on Card</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-gray-400 text-xl">person</span>
+<div id="card-fields">
+    <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-name">Name on Card</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-gray-400 text-xl">person</span>
+            </div>
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="card-name" placeholder="John Doe" type="text" required/>
+        </div>
+    </div>
+    <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-number">Card Number</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-gray-400 text-xl">credit_card</span>
+            </div>
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="card-number" placeholder="0000 0000 0000 0000" type="text" required/>
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-primary text-xl">lock</span>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-1">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-expiry">Expiry Date</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="material-symbols-outlined text-gray-400 text-xl">calendar_today</span>
+                </div>
+                <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="card-expiry" placeholder="MM/YY" type="text" required/>
+            </div>
+        </div>
+        <div class="space-y-1">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-cvv">CVC / CVV</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="material-symbols-outlined text-gray-400 text-xl">security</span>
+                </div>
+                <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="card-cvv" placeholder="•••" type="password" required/>
+            </div>
+        </div>
+    </div>
 </div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="card-name" placeholder="John Doe" type="text" required/>
+
+<!-- Wallet Fields (hidden by default, shown when Wallet selected) -->
+<div id="wallet-fields" class="hidden">
+    <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-name">Full Name</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-gray-400 text-xl">person</span>
+            </div>
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-name" placeholder="Full Name" type="text" />
+        </div>
+    </div>
+    <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-phone">Phone Number</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-gray-400 text-xl">phone</span>
+            </div>
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-phone" placeholder="01XXXXXXXXX" type="tel" />
+        </div>
+    </div>
+    <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-provider">Provider</label>
+        <select id="wallet-provider" class="block w-full pl-3 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600">
+            <option value="">Select provider</option>
+            <option value="vodafone">Vodafone Cash</option>
+            <option value="orange">Orange Cash</option>
+            <option value="fawry">Fawry</option>
+        </select>
+    </div>
 </div>
-</div>
-<div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-number">Card Number</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-gray-400 text-xl">credit_card</span>
-</div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="card-number" placeholder="0000 0000 0000 0000" type="text" required/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-primary text-xl">lock</span>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-5">
-<div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-expiry">Expiry Date</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-gray-400 text-xl">calendar_today</span>
-</div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="card-expiry" placeholder="MM/YY" type="text" required/>
-</div>
-</div>
-<div class="space-y-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-cvv">CVC / CVV</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-gray-400 text-xl">security</span>
-</div>
-<input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="card-cvv" placeholder="•••" type="password" required/>
-</div>
-</div>
-</div>
+
 <div class="pt-6">
-<button id="submit-payment" class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-black bg-primary hover:bg-[#25d660] focus:outline-none focus:ring-4 focus:ring-primary/30 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
-                                    <span id="pay-btn-text">Pay <span id="pay-amount">EGP 0.00</span></span>
-                                    <span class="absolute right-4 inset-y-0 flex items-center opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-<span class="material-symbols-outlined">arrow_forward</span>
-</span>
-</button>
+    <button id="submit-payment" class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-black bg-primary hover:bg-[#25d660] focus:outline-none focus:ring-4 focus:ring-primary/30 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
+        <span id="pay-btn-text">Pay <span id="pay-amount">EGP 0.00</span></span>
+        <span class="absolute right-4 inset-y-0 flex items-center opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </span>
+    </button>
 </div>
 </form>
 <div class="mt-6 flex flex-col items-center justify-center gap-2 text-center">
