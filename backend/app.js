@@ -27,6 +27,10 @@ const app = express();
 // Trust proxy (for rate limiting behind reverse proxy)
 // app.set('trust proxy', 1);
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.originalUrl}-${JSON.stringify(req.body)}`);
+  next();
+});
 // Body parser
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
