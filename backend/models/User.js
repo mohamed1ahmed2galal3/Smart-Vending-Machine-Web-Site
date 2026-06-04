@@ -44,6 +44,16 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+
+  accountBalance: {
+    type: Number,
+    default: 0,
+    min: [0, 'Account balance cannot be negative']
+  },
+
+  balanceUpdatedAt: {
+    type: Date
+  },
   
   lastOrderAt: {
     type: Date
@@ -57,9 +67,5 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
-
-// Indexes
-userSchema.index({ email: 1 }, { unique: true, sparse: true });
-userSchema.index({ phone: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('User', userSchema);

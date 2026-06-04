@@ -117,14 +117,19 @@ const Confirmation = {
     const expiryEl = document.getElementById('code-expiry');
     if (!expiryEl) return;
     
-    // Pickup code expires in 15 minutes
-    let timeLeft = 15 * 60; // 15 minutes in seconds
+    const expiryTime = this.orderData.pickupCodeExpiresAt
+      ? new Date(this.orderData.pickupCodeExpiresAt).getTime()
+      : Date.now() + CONFIG.PICKUP_CODE_EXPIRY;
     
     const updateTimer = () => {
-      const minutes = Math.floor(timeLeft / 60);
+      const timeLeft = Math.max(0, Math.floor((expiryTime - Date.now()) / 1000));
+      const hours = Math.floor(timeLeft / 3600);
+      const minutes = Math.floor((timeLeft % 3600) / 60);
       const seconds = timeLeft % 60;
       
-      expiryEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      expiryEl.textContent = hours > 0
+        ? `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+        : `${minutes}:${seconds.toString().padStart(2, '0')}`;
       
       if (timeLeft <= 0) {
         expiryEl.textContent = 'Expired';
@@ -136,7 +141,6 @@ const Confirmation = {
         expiryEl.classList.add('text-yellow-500');
       }
       
-      timeLeft--;
     };
     
     updateTimer();
@@ -176,12 +180,14 @@ const Confirmation = {
         if (statusEl) {
           const status = response.data.status;
           const statusText = {
-            'pending': 'Pending',
-            'paid': 'Paid - Ready for Pickup',
+            'pending_payment': 'Pending Payment',
+            'ready_to_dispense': 'Ready to be Disposed',
             'processing': 'Processing',
-            'ready': 'Ready for Pickup',
-            'completed': 'Completed',
-            'cancelled': 'Cancelled'
+            'dispensing': 'Dispensing',
+            'dispensed': 'Disposed',
+            'declined': 'Declined',
+            'cancelled': 'Cancelled',
+            'dispense_failed': 'Dispense Failed'
           };
           statusEl.textContent = statusText[status] || status;
         }

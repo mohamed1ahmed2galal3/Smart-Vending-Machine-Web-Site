@@ -27,10 +27,6 @@ const app = express();
 // Trust proxy (for rate limiting behind reverse proxy)
 // app.set('trust proxy', 1);
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.originalUrl}-${JSON.stringify(req.body)}`);
-  next();
-});
 // Body parser
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -42,7 +38,7 @@ app.use(helmet());
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Session-ID', 'X-Machine-ID', 'X-Hardware-API-Key'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Session-ID', 'X-Machine-ID', 'X-Hardware-API-Key', 'X-Mobile-API-Key'],
   exposedHeaders: ['X-Session-ID'],
   credentials: true
 }));

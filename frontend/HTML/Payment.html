@@ -68,8 +68,8 @@
 <main class="flex-1 w-full max-w-[1200px] mx-auto p-4 md:p-8 lg:p-12">
 <!-- Page Heading -->
 <div class="mb-8 md:mb-12">
-<h1 class="text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em] mb-2">Secure Checkout</h1>
-<p class="text-gray-500 dark:text-gray-400 text-base font-normal">Complete your purchase to dispense items instantly.</p>
+<h1 class="text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em] mb-2">Wallet Checkout</h1>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal">Choose the transfer provider and enter the phone number you will send from.</p>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 <!-- Left Column: Order Summary -->
@@ -101,37 +101,48 @@
 <div class="lg:col-span-7 order-1 lg:order-2">
 <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-6 md:p-8">
 <div class="flex items-center justify-between mb-6">
-<h2 class="text-xl font-bold">Payment Method</h2>
-<div class="flex gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-<img class="h-6 object-contain" data-alt="Visa Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApE3g-ckQYAPyEfNgA6KTeUQW0tpgpxAhqSnOceKFaYIzTGXt-KLTxGDzNLy4FuPpNwVivI7Oxd6EM-wDQupztqTNIFcyWm4tBQrT3EqDOkwbaF65iSUsaiaaxnlhKHKQ7cPepzKtA83hw8MTMo-MZEGQldmP0UM_OzlFPk5kdvyUnjCFsU2b07iK484-VWEG0zTgB7VFX-0LlYNo9r4WM8OvC6KSXlyLm5nOFGRqDf_jKeRbX3cS5N0B3Hdcx0FgVf00Uh-Q2TPtU"/>
-<img class="h-6 object-contain" data-alt="Mastercard Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr1-aG_Q3XBwVYV6UsN8ROVDS2KITblP97ZFfzVzZTqRHZe0VGW1IU7noYcHCppqozEs-pLI84FijYex-tEoVp3QGdm15mWxL_dOIlElYGCWB8meXMwF9Uzb1kM-38zjK-HaZ7_lcgLNLpJ3r_XpJaLflNGRnjwWhS5h4lMqMGnF3N8rxkqEZ1WKmtoXJEqdjFShYyINSpRc2cB5RSjPs-KBGoPsKcELHnXiWIh6xFug-33mRnxnZVbVDXExK04keyr7jIb1_9zExv"/>
+<h2 class="text-xl font-bold">Transfer Provider</h2>
+<div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-base">sms</span>
+<span>Confirmation appears after the receiving phone reports the SMS.</span>
 </div>
 </div>
-<!-- Payment Method Selector -->
-<div class="grid grid-cols-2 gap-3 mb-8">
+<!-- Provider Selector -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
     <label class="cursor-pointer relative group">
-        <input checked class="peer sr-only" name="payment_method" type="radio" value="card" id="pm-card" />
+        <input checked class="peer sr-only" name="payment_provider" type="radio" value="vodafone_cash" id="provider-vodafone" />
         <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24">
-            <span class="material-symbols-outlined text-3xl">credit_card</span>
-            <span class="text-sm font-medium">Card</span>
+            <span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
+            <span class="text-sm font-medium">Vodafone Cash</span>
             <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
         </div>
     </label>
     <label class="cursor-pointer relative group">
-        <input class="peer sr-only" name="payment_method" type="radio" value="wallet" id="pm-wallet" />
+        <input class="peer sr-only" name="payment_provider" type="radio" value="etisalat_cash" id="provider-etisalat" />
         <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
-            <span class="material-symbols-outlined text-3xl">phonelink_ring</span>
-            <span class="text-sm font-medium">Wallet</span>
+            <span class="material-symbols-outlined text-3xl">mobile_friendly</span>
+            <span class="text-sm font-medium">Etisalat Cash</span>
+            <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+        </div>
+    </label>
+    <label class="cursor-pointer relative group">
+        <input class="peer sr-only" name="payment_provider" type="radio" value="instapay" id="provider-instapay" />
+        <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
+            <span class="material-symbols-outlined text-3xl">currency_exchange</span>
+            <span class="text-sm font-medium">Instapay</span>
             <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
         </div>
     </label>
 </div>
-<!-- Card Form -->
+<div id="transfer-instructions" class="mb-6 rounded-lg border border-primary/30 bg-primary/10 p-4 text-sm text-gray-700 dark:text-gray-200">
+    Transfer the exact total to the machine wallet phone, then wait here for confirmation.
+</div>
+<!-- Wallet Transfer Form -->
 <form id="payment-form" class="space-y-5">
 <!-- Error display -->
 <div id="payment-error" class="hidden"></div>
 
-<div id="card-fields">
+<div id="card-fields" class="hidden">
     <div class="space-y-1">
         <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="card-name">Name on Card</label>
         <div class="relative">
@@ -176,39 +187,40 @@
 </div>
 
 <!-- Wallet Fields (hidden by default, shown when Wallet selected) -->
-<div id="wallet-fields" class="hidden">
+<div id="wallet-fields">
     <div class="space-y-1">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-name">Full Name</label>
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-name">Sender Name</label>
         <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-gray-400 text-xl">person</span>
             </div>
-            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-name" placeholder="Full Name" type="text" />
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-name" placeholder="Optional" type="text" />
         </div>
     </div>
     <div class="space-y-1">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-phone">Phone Number</label>
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-phone">Sender Mobile Number</label>
         <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-gray-400 text-xl">phone</span>
             </div>
-            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-phone" placeholder="01XXXXXXXXX" type="tel" />
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-phone" placeholder="01XXXXXXXXX" type="tel" required />
         </div>
     </div>
     <div class="space-y-1">
         <label class="text-sm font-medium text-gray-700 dark:text-gray-300" for="wallet-provider">Provider</label>
         <select id="wallet-provider" class="block w-full pl-3 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600">
-            <option value="">Select provider</option>
-            <option value="vodafone">Vodafone Cash</option>
-            <option value="orange">Orange Cash</option>
-            <option value="fawry">Fawry</option>
+            <option value="vodafone_cash">Vodafone Cash</option>
+            <option value="etisalat_cash">Etisalat Cash</option>
+            <option value="instapay">Instapay</option>
         </select>
     </div>
 </div>
 
+<div id="payment-status" class="hidden"></div>
+
 <div class="pt-6">
     <button id="submit-payment" class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-black bg-primary hover:bg-[#25d660] focus:outline-none focus:ring-4 focus:ring-primary/30 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
-        <span id="pay-btn-text">Pay <span id="pay-amount">EGP 0.00</span></span>
+        <span id="pay-btn-text">Create Order <span id="pay-amount">EGP 0.00</span></span>
         <span class="absolute right-4 inset-y-0 flex items-center opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
             <span class="material-symbols-outlined">arrow_forward</span>
         </span>
@@ -218,9 +230,9 @@
 <div class="mt-6 flex flex-col items-center justify-center gap-2 text-center">
 <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
 <span class="material-symbols-outlined text-sm">lock</span>
-<span>Payments are secure and encrypted.</span>
+<span>Payment is confirmed after the transfer SMS is received.</span>
 </div>
-<p class="text-[10px] text-gray-400 uppercase tracking-wider">Powered by Stripe</p>
+<p class="text-[10px] text-gray-400 uppercase tracking-wider">Vodafone Cash · Etisalat Cash · Instapay</p>
 </div>
 </div>
 </div>

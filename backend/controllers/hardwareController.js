@@ -24,7 +24,7 @@ exports.verifyPickupCode = asyncHandler(async (req, res, next) => {
   const order = await Order.findOne({
     pickupCode,
     machineId,
-    status: 'paid', // Only paid orders can be dispensed
+    status: 'ready_to_dispense', // Only ready orders can be dispensed
     paymentStatus: 'paid'
   });
 
@@ -86,8 +86,8 @@ exports.triggerDispense = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Order does not belong to this machine', 400));
   }
 
-  if (order.status !== 'paid') {
-    return next(new ErrorResponse('Order must be paid before dispensing', 400));
+  if (order.status !== 'ready_to_dispense') {
+    return next(new ErrorResponse('Order must be ready before dispensing', 400));
   }
 
   // Generate dispensing ID
@@ -98,6 +98,7 @@ exports.triggerDispense = asyncHandler(async (req, res, next) => {
   order.dispensingStatus = 'in_progress';
   order.dispensingId = dispensingId;
   order.dispensingProgress = 0;
+  order.pickupCodeUsedAt = new Date();
   await order.save();
 
   res.status(200).json({
@@ -168,7 +169,7 @@ exports.updateDispenseStatus = asyncHandler(async (req, res, next) => {
 
   // Check if all items dispensed
   if (status === 'completed') {
-    order.status = 'completed';
+    order.status = 'dispensed';
     order.completedAt = new Date();
     order.dispensingProgress = 100;
 
@@ -183,7 +184,7 @@ exports.updateDispenseStatus = asyncHandler(async (req, res, next) => {
       }
     );
   } else if (status === 'failed') {
-    order.status = 'failed';
+    order.status = 'dispense_failed';
     order.failureReason = req.body.failureReason || 'Dispensing failed';
   }
 
@@ -329,7 +330,7 @@ exports.getPendingOrders = asyncHandler(async (req, res, next) => {
 
   const orders = await Order.find({
     machineId,
-    status: { $in: ['paid', 'dispensing'] },
+    status: { $in: ['ready_to_dispense', 'dispensing'] },
     paymentStatus: 'paid'
   }).select('orderNumber pickupCode items status dispensingStatus');
 
