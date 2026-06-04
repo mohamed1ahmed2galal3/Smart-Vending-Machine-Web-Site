@@ -5,6 +5,7 @@ const {
   createPaymentIntent,
   processPayment,
   ingestWalletTransaction,
+  ingestWalletTransactionsBulk,
   getPaymentStatus,
   handleWebhook,
   requestRefund
@@ -14,6 +15,7 @@ const authenticateMobileApp = require('../middleware/authenticateMobileApp');
 // Payment routes
 router.post('/create-intent', createPaymentIntent);
 router.post('/process', processPayment);
+router.post('/wallet-notifications/bulk', authenticateMobileApp, ingestWalletTransactionsBulk);
 router.post('/wallet-notifications', authenticateMobileApp, ingestWalletTransaction);
 router.get('/:orderId/status', getPaymentStatus);
 router.post('/:orderId/refund', requestRefund);

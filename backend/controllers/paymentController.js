@@ -184,12 +184,7 @@ exports.processPayment = asyncHandler(async (req, res, next) => {
   });
 });
 
-/**
- * @desc    Ingest wallet SMS transaction from the mobile app
- * @route   POST /api/v1/payments/wallet-notifications
- * @access  Mobile app
- */
-exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
+const processWalletTransaction = async (payload) => {
   const {
     provider,
     senderPhone,
@@ -198,10 +193,10 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
     smsTimestamp,
     rawMessage,
     idempotencyKey
-  } = req.body;
+  } = payload;
 
   if (!WALLET_PROVIDERS.includes(provider)) {
-    return next(new ErrorResponse('Unsupported wallet provider', 400));
+    throw new ErrorResponse('Unsupported wallet provider', 400);
   }
 
   const normalizedPhone = normalizeEgyptianPhone(senderPhone);
@@ -210,21 +205,21 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
   const normalizedSenderName = normalizeWalletName(senderName);
 
   if (!validSenderPhone && !normalizedSenderName) {
-    return next(new ErrorResponse('Sender phone or sender name is required', 400));
+    throw new ErrorResponse('Sender phone or sender name is required', 400);
   }
 
   if (provider !== 'orange_cash' && !validSenderPhone) {
-    return next(new ErrorResponse('Sender phone is required for this wallet provider', 400));
+    throw new ErrorResponse('Sender phone is required for this wallet provider', 400);
   }
 
   const paymentAmount = toMoney(amount);
   if (!Number.isFinite(paymentAmount) || paymentAmount <= 0) {
-    return next(new ErrorResponse('A positive payment amount is required', 400));
+    throw new ErrorResponse('A positive payment amount is required', 400);
   }
 
   const smsDate = smsTimestamp ? new Date(smsTimestamp) : new Date();
   if (Number.isNaN(smsDate.getTime())) {
-    return next(new ErrorResponse('Invalid SMS timestamp', 400));
+    throw new ErrorResponse('Invalid SMS timestamp', 400);
   }
 
   const dedupeKey = idempotencyKey || buildWalletIdempotencyKey({
@@ -237,16 +232,17 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
 
   const existingPayment = await Payment.findOne({ idempotencyKey: dedupeKey });
   if (existingPayment) {
-    return res.status(200).json({
+    return {
       success: true,
       duplicate: true,
+      matched: Boolean(existingPayment.order),
       message: 'Transaction was already processed',
       data: {
         paymentId: existingPayment._id,
         orderId: existingPayment.order,
         status: existingPayment.status
       }
-    });
+    };
   }
 
   let user = validSenderPhone
@@ -317,7 +313,7 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
     };
     await payment.save();
 
-    return res.status(200).json({
+    return {
       success: true,
       matched: false,
       message: 'No pending order matched this transaction. Amount credited to account balance.',
@@ -330,7 +326,7 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
         balanceCredited: paymentAmount,
         accountBalance: user.accountBalance
       }
-    });
+    };
   }
 
   const availableAmount = toMoney(priorBalance + paymentAmount);
@@ -378,7 +374,7 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
 
     await Cart.findOneAndDelete({ sessionId: order.sessionId });
 
-    return res.status(200).json({
+    return {
       success: true,
       matched: true,
       message: balanceCredited > 0
@@ -397,7 +393,7 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
         pickupCode: order.pickupCode,
         pickupCodeExpiresAt: order.pickupCodeExpiresAt
       }
-    });
+    };
   }
 
   user.accountBalance = availableAmount;
@@ -422,7 +418,7 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
   await order.save();
   await payment.save();
 
-  res.status(200).json({
+  return {
     success: true,
     matched: true,
     message: 'Payment was insufficient. Amount was added to account balance.',
@@ -437,6 +433,65 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
       accountBalance: user.accountBalance,
       shortfall: toMoney(order.total - availableAmount)
     }
+  };
+};
+
+/**
+ * @desc    Ingest one wallet SMS transaction from the mobile app
+ * @route   POST /api/v1/payments/wallet-notifications
+ * @access  Mobile app
+ */
+exports.ingestWalletTransaction = asyncHandler(async (req, res) => {
+  const result = await processWalletTransaction(req.body);
+  res.status(200).json(result);
+});
+
+/**
+ * @desc    Ingest wallet SMS transactions in bulk from the mobile app
+ * @route   POST /api/v1/payments/wallet-notifications/bulk
+ * @access  Mobile app
+ */
+exports.ingestWalletTransactionsBulk = asyncHandler(async (req, res, next) => {
+  const transactions = Array.isArray(req.body) ? req.body : req.body.transactions;
+
+  if (!Array.isArray(transactions)) {
+    return next(new ErrorResponse('transactions must be an array', 400));
+  }
+
+  const results = [];
+
+  for (let index = 0; index < transactions.length; index += 1) {
+    const tx = transactions[index] || {};
+    const clientId = tx.clientId ?? tx.localId ?? tx.id ?? null;
+
+    try {
+      const result = await processWalletTransaction(tx);
+      results.push({
+        index,
+        clientId,
+        success: true,
+        duplicate: Boolean(result.duplicate),
+        matched: Boolean(result.matched),
+        message: result.message,
+        data: result.data
+      });
+    } catch (error) {
+      results.push({
+        index,
+        clientId,
+        success: false,
+        statusCode: error.statusCode || 500,
+        message: error.message || 'Failed to process wallet transaction'
+      });
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    count: transactions.length,
+    processed: results.filter(result => result.success).length,
+    failed: results.filter(result => !result.success).length,
+    data: results
   });
 });
 

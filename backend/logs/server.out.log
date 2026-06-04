@@ -16,17 +16,220 @@
 ╚═══════════════════════════════════════════════════════════╝
   [39m
 [1m[4m[36mMongoDB Connected: localhost[39m[24m[22m
-[0mGET /health [32m200[0m 2.980 ms - 120[0m
-[0mGET /health [32m200[0m 0.548 ms - 120[0m
-[0mGET /api/v1/products?machineId=VM-4029&limit=1 [32m200[0m 22.715 ms - 880[0m
-[0mPOST /api/v1/orders [32m201[0m 27.290 ms - 716[0m
-[0mGET /api/v1/orders/6a21b6d15ce77d8a7b8a49ae [32m200[0m 10.857 ms - 1202[0m
-[0mPOST /api/v1/payments/wallet-notifications [32m200[0m 24.081 ms - 393[0m
-[0mGET /api/v1/orders/6a21b6d15ce77d8a7b8a49ae/status [32m200[0m 4.490 ms - 441[0m
-[0mGET /api/v1/products?machineId=VM-4029&limit=1 [32m200[0m 6.601 ms - 880[0m
-[0mPOST /api/v1/orders [32m201[0m 7.132 ms - 744[0m
-[0mGET /api/v1/orders/6a21b6e65ce77d8a7b8a49c8 [32m200[0m 5.934 ms - 1223[0m
-[0mPOST /api/v1/payments/wallet-notifications [32m200[0m 19.085 ms - 393[0m
-[0mGET /api/v1/orders/6a21b6e65ce77d8a7b8a49c8/status [32m200[0m 2.775 ms - 441[0m
-[0mGET /health [32m200[0m 0.240 ms - 120[0m
-[0mGET /health [32m200[0m 0.294 ms - 120[0m
+[0mGET /health [32m200[0m 2.540 ms - 120[0m
+[0mGET /health [32m200[0m 0.506 ms - 120[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 1.300 ms - 61[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 1.543 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 2.737 ms - 1581[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.479 ms - 61[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 1.068 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.606 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 1.304 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.910 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.835 ms - 1581[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.228 ms - 61[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.786 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.650 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.811 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.756 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.632 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.503 ms - 1581[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.833 ms - 1581[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.205 ms - 61[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [33m401[0m 0.692 ms - 1581[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.562 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.342 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.344 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.285 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.381 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.433 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.291 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.241 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.367 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.273 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.241 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.252 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.236 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.238 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.234 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.256 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.237 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.227 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.231 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.247 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.254 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.277 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.256 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.246 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.237 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.248 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.427 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.234 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.344 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.298 ms - 61[0m
+[0mPOST /api/v1/payments/wallet-notifications/bulk [32m200[0m 0.257 ms - 61[0m

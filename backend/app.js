@@ -27,8 +27,8 @@ const app = express();
 // Trust proxy (for rate limiting behind reverse proxy)
 // app.set('trust proxy', 1);
 
-// Body parser
-app.use(express.json({ limit: '10kb' }));
+// Body parser. Wallet SMS bulk sync can legitimately include many raw messages.
+app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Security middleware
@@ -55,9 +55,15 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Rate limiting
+const isWalletNotificationRequest = (req) => (
+  req.method === 'POST' &&
+  req.originalUrl.split('?')[0].startsWith('/api/v1/payments/wallet-notifications')
+);
+
 const generalLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60 * 1000, // 1 minute
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+  skip: isWalletNotificationRequest,
   message: {
     success: false,
     error: 'Too Many Requests',
@@ -68,6 +74,7 @@ const generalLimiter = rateLimit({
 const paymentLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10,
+  skip: isWalletNotificationRequest,
   message: {
     success: false,
     error: 'Too Many Requests',
