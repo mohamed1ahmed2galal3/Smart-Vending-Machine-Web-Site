@@ -124,6 +124,10 @@ const API = {
       const details = typeof paymentDetails === 'string'
         ? { paymentMethod: paymentDetails }
         : paymentDetails;
+      const rawPhone = details.payerPhone || details.customerPhone || '';
+      const normalizedPhone = typeof normalizeEgyptianMobile === 'function'
+        ? normalizeEgyptianMobile(rawPhone)
+        : rawPhone;
 
       return API.request('/orders', {
         method: 'POST',
@@ -132,8 +136,10 @@ const API = {
           machineId: getMachineId(),
           paymentMethod: details.paymentMethod || details.paymentProvider || 'vodafone_cash',
           paymentProvider: details.paymentProvider || details.provider,
-          customerPhone: details.customerPhone || details.payerPhone,
-          payerPhone: details.payerPhone || details.customerPhone
+          customerPhone: normalizedPhone || rawPhone,
+          payerPhone: normalizedPhone || rawPhone,
+          customerName: details.customerName || details.payerName,
+          payerName: details.payerName || details.customerName
         })
       });
     },

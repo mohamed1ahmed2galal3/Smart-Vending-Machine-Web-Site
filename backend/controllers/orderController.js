@@ -4,7 +4,18 @@ const Product = require('../models/Product');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorResponse = require('../utils/errorResponse');
 const { cancelExpiredPendingOrders } = require('../utils/orderExpiry');
-const { normalizeEgyptianPhone } = require('../utils/phone');
+const { normalizeEgyptianPhone, isEgyptianMobile } = require('../utils/phone');
+
+const WALLET_PROVIDERS = ['vodafone_cash', 'etisalat_cash', 'orange_cash', 'instapay'];
+
+const normalizeWalletName = (value) => {
+  const cleaned = String(value || '')
+    .replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return cleaned ? cleaned.toLowerCase() : null;
+};
 
 /**
  * @desc    Create new order
@@ -20,7 +31,9 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     paymentProvider,
     customerEmail,
     customerPhone,
-    payerPhone
+    payerPhone,
+    customerName,
+    payerName
   } = req.body;
 
   if (!machineId) {
@@ -33,9 +46,17 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
 
   const normalizedPaymentMethod = paymentProvider || paymentMethod;
   const normalizedPayerPhone = normalizeEgyptianPhone(payerPhone || customerPhone);
-  const walletProviders = ['vodafone_cash', 'etisalat_cash', 'instapay'];
+  const normalizedPayerName = normalizeWalletName(payerName || customerName);
 
-  if (walletProviders.includes(normalizedPaymentMethod) && !normalizedPayerPhone) {
+  if (normalizedPaymentMethod === 'orange_cash' && !normalizedPayerName) {
+    return next(new ErrorResponse('Sender name is required for Orange Cash payments', 400));
+  }
+
+  if (
+    WALLET_PROVIDERS.includes(normalizedPaymentMethod) &&
+    normalizedPaymentMethod !== 'orange_cash' &&
+    !isEgyptianMobile(normalizedPayerPhone)
+  ) {
     return next(new ErrorResponse('Payer phone is required for wallet payments', 400));
   }
 
@@ -124,11 +145,12 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     total,
     paymentMethod: normalizedPaymentMethod,
     paymentProvider: paymentProvider || (
-      ['vodafone_cash', 'etisalat_cash', 'instapay'].includes(paymentMethod) ? paymentMethod : null
+      WALLET_PROVIDERS.includes(paymentMethod) ? paymentMethod : null
     ),
     customerEmail,
     customerPhone,
     payerPhone: normalizedPayerPhone,
+    payerName: normalizedPayerName,
     status: 'pending_payment',
     paymentStatus: 'pending'
   });
@@ -150,6 +172,7 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
       paymentStatus: order.paymentStatus,
       paymentMethod: order.paymentMethod,
       paymentProvider: order.paymentProvider,
+      payerName: order.payerName,
       paymentDeadlineAt: order.paymentDeadlineAt,
       createdAt: order.createdAt
     }

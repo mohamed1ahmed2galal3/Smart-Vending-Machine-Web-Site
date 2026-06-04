@@ -25,6 +25,7 @@ const PAYMENT_STATUSES = [
 const PAYMENT_METHODS = [
   'vodafone_cash',
   'etisalat_cash',
+  'orange_cash',
   'instapay',
   'account_balance',
   'card',
@@ -188,7 +189,7 @@ const orderSchema = new mongoose.Schema({
 
   paymentProvider: {
     type: String,
-    enum: ['vodafone_cash', 'etisalat_cash', 'instapay', null],
+    enum: ['vodafone_cash', 'etisalat_cash', 'orange_cash', 'instapay', null],
     default: null
   },
   
@@ -248,6 +249,12 @@ const orderSchema = new mongoose.Schema({
     type: String,
     index: true
   },
+
+  payerName: {
+    type: String,
+    trim: true,
+    index: true
+  },
   
   receiptSent: {
     type: Boolean,
@@ -295,6 +302,7 @@ orderSchema.pre('save', async function(next) {
 orderSchema.index({ machineId: 1, status: 1 });
 orderSchema.index({ sessionId: 1 });
 orderSchema.index({ payerPhone: 1, paymentProvider: 1, status: 1 });
+orderSchema.index({ payerName: 1, paymentProvider: 1, status: 1 });
 orderSchema.index({ paymentDeadlineAt: 1, status: 1 });
 orderSchema.index({ createdAt: -1 });
 orderSchema.index({ status: 1, paymentStatus: 1 });

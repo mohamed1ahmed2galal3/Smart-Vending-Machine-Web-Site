@@ -5,12 +5,28 @@ const User = require('../models/User');
 const crypto = require('crypto');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorResponse = require('../utils/errorResponse');
-const { normalizeEgyptianPhone } = require('../utils/phone');
+const { normalizeEgyptianPhone, isEgyptianMobile } = require('../utils/phone');
 const { cancelExpiredPendingOrders } = require('../utils/orderExpiry');
 
-const WALLET_PROVIDERS = ['vodafone_cash', 'etisalat_cash', 'instapay'];
+const WALLET_PROVIDERS = ['vodafone_cash', 'etisalat_cash', 'orange_cash', 'instapay'];
 
 const toMoney = (value) => Math.round(Number(value) * 100) / 100;
+
+const cleanWalletName = (value) => {
+  const cleaned = String(value || '')
+    .replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return cleaned || null;
+};
+
+const normalizeWalletName = (value) => {
+  const cleaned = cleanWalletName(value);
+  return cleaned ? cleaned.toLowerCase() : null;
+};
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const buildWalletIdempotencyKey = ({
   provider,
@@ -133,7 +149,7 @@ exports.processPayment = asyncHandler(async (req, res, next) => {
     amount: order.total,
     currency: 'EGP',
     method: resolvedMethod,
-    provider: ['vodafone_cash', 'etisalat_cash', 'instapay'].includes(resolvedMethod)
+    provider: WALLET_PROVIDERS.includes(resolvedMethod)
       ? resolvedMethod
       : order.paymentProvider,
     status: 'succeeded',
@@ -189,8 +205,16 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
   }
 
   const normalizedPhone = normalizeEgyptianPhone(senderPhone);
-  if (!normalizedPhone) {
-    return next(new ErrorResponse('Sender phone is required', 400));
+  const validSenderPhone = isEgyptianMobile(normalizedPhone) ? normalizedPhone : '';
+  const cleanedSenderName = cleanWalletName(senderName);
+  const normalizedSenderName = normalizeWalletName(senderName);
+
+  if (!validSenderPhone && !normalizedSenderName) {
+    return next(new ErrorResponse('Sender phone or sender name is required', 400));
+  }
+
+  if (provider !== 'orange_cash' && !validSenderPhone) {
+    return next(new ErrorResponse('Sender phone is required for this wallet provider', 400));
   }
 
   const paymentAmount = toMoney(amount);
@@ -205,7 +229,7 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
 
   const dedupeKey = idempotencyKey || buildWalletIdempotencyKey({
     provider,
-    senderPhone: normalizedPhone,
+    senderPhone: validSenderPhone || normalizedSenderName,
     amount: paymentAmount,
     smsTimestamp: smsDate,
     rawMessage
@@ -225,14 +249,19 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
     });
   }
 
-  let user = await User.findOne({ phone: normalizedPhone });
+  let user = validSenderPhone
+    ? await User.findOne({ phone: validSenderPhone })
+    : await User.findOne({
+      name: new RegExp(`^${escapeRegExp(cleanedSenderName)}$`, 'i')
+    });
+
   if (!user) {
     user = await User.create({
-      phone: normalizedPhone,
-      name: senderName
+      ...(validSenderPhone ? { phone: validSenderPhone } : {}),
+      ...(cleanedSenderName ? { name: cleanedSenderName } : {})
     });
-  } else if (senderName && !user.name) {
-    user.name = senderName;
+  } else if (cleanedSenderName && !user.name) {
+    user.name = cleanedSenderName;
     await user.save();
   }
 
@@ -244,24 +273,34 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
     currency: 'EGP',
     method: provider,
     provider,
-    senderPhone: normalizedPhone,
-    senderName,
+    senderPhone: validSenderPhone || undefined,
+    senderName: cleanedSenderName,
     smsTimestamp: smsDate,
     rawMessage,
     status: 'received'
   });
 
-  await cancelExpiredPendingOrders({
-    paymentProvider: provider,
-    payerPhone: normalizedPhone
-  });
+  const expiryFilter = { paymentProvider: provider };
+  if (provider === 'orange_cash' && normalizedSenderName) {
+    expiryFilter.payerName = normalizedSenderName;
+  } else {
+    expiryFilter.payerPhone = validSenderPhone;
+  }
+  await cancelExpiredPendingOrders(expiryFilter);
 
-  const order = await Order.findOne({
+  const orderQuery = {
     paymentProvider: provider,
-    payerPhone: normalizedPhone,
     status: 'pending_payment',
     paymentDeadlineAt: { $gte: new Date() }
-  }).sort({ createdAt: 1 });
+  };
+
+  if (provider === 'orange_cash' && normalizedSenderName) {
+    orderQuery.payerName = normalizedSenderName;
+  } else {
+    orderQuery.payerPhone = validSenderPhone;
+  }
+
+  const order = await Order.findOne(orderQuery).sort({ createdAt: 1 });
 
   const priorBalance = toMoney(user.accountBalance || 0);
 
@@ -285,7 +324,8 @@ exports.ingestWalletTransaction = asyncHandler(async (req, res, next) => {
       data: {
         paymentId: payment._id,
         provider,
-        senderPhone: normalizedPhone,
+        senderPhone: validSenderPhone,
+        senderName: cleanedSenderName,
         amount: paymentAmount,
         balanceCredited: paymentAmount,
         accountBalance: user.accountBalance

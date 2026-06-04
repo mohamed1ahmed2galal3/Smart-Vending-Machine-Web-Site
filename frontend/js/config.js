@@ -16,6 +16,42 @@ function getApiBaseUrl() {
   return `${window.location.protocol}//${host}:5000/api/v1`;
 }
 
+function normalizeInputDigits(value = '') {
+  let output = '';
+
+  for (const char of String(value)) {
+    const code = char.charCodeAt(0);
+    if (code >= 0x0660 && code <= 0x0669) {
+      output += String(code - 0x0660);
+    } else if (code >= 0x06F0 && code <= 0x06F9) {
+      output += String(code - 0x06F0);
+    } else {
+      output += char;
+    }
+  }
+
+  return output;
+}
+
+function normalizeEgyptianMobile(value = '') {
+  let phone = normalizeInputDigits(value).replace(/\D/g, '');
+
+  if (phone.startsWith('0020')) {
+    phone = `0${phone.slice(4)}`;
+  } else if (phone.startsWith('20') && phone.length === 12) {
+    phone = `0${phone.slice(2)}`;
+  } else if (phone.startsWith('1') && phone.length === 10) {
+    phone = `0${phone}`;
+  }
+
+  return /^01\d{9}$/.test(phone) ? phone : '';
+}
+
+if (typeof window !== 'undefined') {
+  window.normalizeInputDigits = normalizeInputDigits;
+  window.normalizeEgyptianMobile = normalizeEgyptianMobile;
+}
+
 const CONFIG = {
   // API Base URL. Override in browser console with:
   // localStorage.setItem('smartvend_api_base_url', 'http://YOUR_PC_IP:5000/api/v1')

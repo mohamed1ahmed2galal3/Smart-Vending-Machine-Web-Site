@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const PAYMENT_METHODS = [
   'vodafone_cash',
   'etisalat_cash',
+  'orange_cash',
   'instapay',
   'account_balance',
   'manual_adjustment',
@@ -78,7 +79,7 @@ const paymentSchema = new mongoose.Schema({
 
   provider: {
     type: String,
-    enum: ['vodafone_cash', 'etisalat_cash', 'instapay', null],
+    enum: ['vodafone_cash', 'etisalat_cash', 'orange_cash', 'instapay', null],
     default: null
   },
 

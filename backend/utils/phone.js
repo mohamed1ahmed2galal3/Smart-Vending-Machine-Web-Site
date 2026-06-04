@@ -23,12 +23,17 @@ const normalizeEgyptianPhone = (value = '') => {
     phone = `0${phone.slice(4)}`;
   } else if (phone.startsWith('20') && phone.length === 12) {
     phone = `0${phone.slice(2)}`;
+  } else if (phone.startsWith('1') && phone.length === 10) {
+    phone = `0${phone}`;
   }
 
   return phone;
 };
 
+const isEgyptianMobile = (value = '') => /^01\d{9}$/.test(value);
+
 module.exports = {
   normalizeDigits,
-  normalizeEgyptianPhone
+  normalizeEgyptianPhone,
+  isEgyptianMobile
 };

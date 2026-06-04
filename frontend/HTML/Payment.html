@@ -108,7 +108,7 @@
 </div>
 </div>
 <!-- Provider Selector -->
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
     <label class="cursor-pointer relative group">
         <input checked class="peer sr-only" name="payment_provider" type="radio" value="vodafone_cash" id="provider-vodafone" />
         <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24">
@@ -133,6 +133,14 @@
             <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
         </div>
     </label>
+    <label class="cursor-pointer relative group">
+        <input class="peer sr-only" name="payment_provider" type="radio" value="orange_cash" id="provider-orange" />
+        <div class="payment-card flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all h-24 text-gray-500 dark:text-gray-400">
+            <span class="material-symbols-outlined text-3xl">account_balance</span>
+            <span class="text-sm font-medium">Orange Cash</span>
+            <span class="check-icon material-symbols-outlined absolute top-2 right-2 text-primary text-lg opacity-0 transition-opacity">check_circle</span>
+        </div>
+    </label>
 </div>
 <div id="transfer-instructions" class="mb-6 rounded-lg border border-primary/30 bg-primary/10 p-4 text-sm text-gray-700 dark:text-gray-200">
     Transfer the exact total to the machine wallet phone, then wait here for confirmation.
@@ -149,7 +157,7 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-gray-400 text-xl">person</span>
             </div>
-            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="card-name" placeholder="John Doe" type="text" required/>
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="card-name" placeholder="John Doe" type="text" disabled/>
         </div>
     </div>
     <div class="space-y-1">
@@ -158,7 +166,7 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-gray-400 text-xl">credit_card</span>
             </div>
-            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="card-number" placeholder="0000 0000 0000 0000" type="text" required/>
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 tracking-wider" id="card-number" placeholder="0000 0000 0000 0000" type="text" disabled/>
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-primary text-xl">lock</span>
             </div>
@@ -171,7 +179,7 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <span class="material-symbols-outlined text-gray-400 text-xl">calendar_today</span>
                 </div>
-                <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="card-expiry" placeholder="MM/YY" type="text" required/>
+                <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center" id="card-expiry" placeholder="MM/YY" type="text" disabled/>
             </div>
         </div>
         <div class="space-y-1">
@@ -180,7 +188,7 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <span class="material-symbols-outlined text-gray-400 text-xl">security</span>
                 </div>
-                <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="card-cvv" placeholder="•••" type="password" required/>
+                <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-center tracking-widest" id="card-cvv" placeholder="•••" type="password" disabled/>
             </div>
         </div>
     </div>
@@ -194,7 +202,7 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-gray-400 text-xl">person</span>
             </div>
-            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-name" placeholder="Optional" type="text" />
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-name" placeholder="Required for Orange Cash" type="text" />
         </div>
     </div>
     <div class="space-y-1">
@@ -203,7 +211,7 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-gray-400 text-xl">phone</span>
             </div>
-            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-phone" placeholder="01XXXXXXXXX" type="tel" required />
+            <input class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600" id="wallet-phone" placeholder="01017486134 / 201017486134" type="tel" required />
         </div>
     </div>
     <div class="space-y-1">
@@ -211,6 +219,7 @@
         <select id="wallet-provider" class="block w-full pl-3 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-[#15251b] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600">
             <option value="vodafone_cash">Vodafone Cash</option>
             <option value="etisalat_cash">Etisalat Cash</option>
+            <option value="orange_cash">Orange Cash</option>
             <option value="instapay">Instapay</option>
         </select>
     </div>
@@ -232,7 +241,7 @@
 <span class="material-symbols-outlined text-sm">lock</span>
 <span>Payment is confirmed after the transfer SMS is received.</span>
 </div>
-<p class="text-[10px] text-gray-400 uppercase tracking-wider">Vodafone Cash · Etisalat Cash · Instapay</p>
+<p class="text-[10px] text-gray-400 uppercase tracking-wider">Vodafone Cash · Etisalat Cash · Orange Cash · Instapay</p>
 </div>
 </div>
 </div>

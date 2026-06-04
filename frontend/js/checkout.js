@@ -8,9 +8,9 @@ const Checkout = {
   pollTimer: null,
 
   async init() {
+    this.setupPaymentForm();
     await Cart.init();
     this.loadOrderSummary();
-    this.setupPaymentForm();
     this.updateTransferInstructions();
   },
 
@@ -24,6 +24,7 @@ const Checkout = {
     return {
       vodafone_cash: 'Vodafone Cash',
       etisalat_cash: 'Etisalat Cash',
+      orange_cash: 'Orange Cash',
       instapay: 'Instapay'
     }[provider] || provider;
   },
@@ -96,6 +97,11 @@ const Checkout = {
     const form = document.getElementById('payment-form');
     if (!form) return;
 
+    document.querySelectorAll('#card-fields input').forEach(input => {
+      input.required = false;
+      input.disabled = true;
+    });
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       this.createWalletOrder();
@@ -106,6 +112,7 @@ const Checkout = {
         const providerSelect = document.getElementById('wallet-provider');
         if (providerSelect) providerSelect.value = input.value;
         this.updateTransferInstructions();
+        this.syncProviderFields();
       });
     });
 
@@ -115,8 +122,29 @@ const Checkout = {
         const matchingRadio = document.querySelector(`input[name="payment_provider"][value="${providerSelect.value}"]`);
         if (matchingRadio) matchingRadio.checked = true;
         this.updateTransferInstructions();
+        this.syncProviderFields();
       });
       providerSelect.value = this.getSelectedProvider();
+    }
+
+    this.syncProviderFields();
+  },
+
+  syncProviderFields() {
+    const provider = this.getSelectedProvider();
+    const nameInput = document.getElementById('wallet-name');
+    const nameLabel = document.querySelector('label[for="wallet-name"]');
+
+    if (!nameInput) return;
+
+    const isOrangeCash = provider === 'orange_cash';
+    nameInput.required = isOrangeCash;
+    nameInput.placeholder = isOrangeCash
+      ? 'Required: name from Orange Cash SMS'
+      : 'Optional';
+
+    if (nameLabel) {
+      nameLabel.textContent = isOrangeCash ? 'Sender Name (Required)' : 'Sender Name';
     }
   },
 
@@ -142,13 +170,21 @@ const Checkout = {
   validateForm() {
     const errors = [];
     const phone = document.getElementById('wallet-phone')?.value;
+    const normalizedPhone = normalizeEgyptianMobile(phone);
 
     if (!this.getSelectedProvider()) {
       errors.push('Please select a transfer provider');
     }
 
-    if (!phone || !/^(\+?2)?0?1\d{9}$/.test(phone.replace(/\s/g, ''))) {
+    if (!normalizedPhone) {
       errors.push('Please enter a valid Egyptian mobile number');
+    }
+
+    if (this.getSelectedProvider() === 'orange_cash') {
+      const name = document.getElementById('wallet-name')?.value.trim();
+      if (!name) {
+        errors.push('Please enter the Orange Cash sender name exactly as it appears in the SMS');
+      }
     }
 
     if (Cart.itemCount === 0) {
@@ -175,7 +211,7 @@ const Checkout = {
 
     try {
       const provider = this.getSelectedProvider();
-      const phone = document.getElementById('wallet-phone')?.value.trim();
+      const phone = normalizeEgyptianMobile(document.getElementById('wallet-phone')?.value);
       const name = document.getElementById('wallet-name')?.value.trim();
 
       const orderResponse = await API.Orders.create({
@@ -183,6 +219,7 @@ const Checkout = {
         paymentProvider: provider,
         payerPhone: phone,
         customerPhone: phone,
+        payerName: name,
         customerName: name
       });
 
