@@ -1,10 +1,36 @@
 const mongoose = require('mongoose');
 
+const PAYMENT_METHODS = [
+  'vodafone_cash',
+  'etisalat_cash',
+  'instapay',
+  'account_balance',
+  'manual_adjustment',
+  'card',
+  'wallet',
+  'qr_code'
+];
+
+const PAYMENT_STATUSES = [
+  'received',
+  'matched',
+  'partial',
+  'succeeded',
+  'failed',
+  'refunded',
+  'cancelled',
+  'duplicate'
+];
+
 const paymentSchema = new mongoose.Schema({
   order: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Order',
-    required: true
+    ref: 'Order'
+  },
+
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   
   transactionId: {
@@ -18,6 +44,13 @@ const paymentSchema = new mongoose.Schema({
     type: String
     // Stripe payment intent ID
   },
+
+  idempotencyKey: {
+    type: String,
+    unique: true,
+    sparse: true,
+    index: true
+  },
   
   amount: {
     type: Number,
@@ -26,21 +59,44 @@ const paymentSchema = new mongoose.Schema({
   
   currency: {
     type: String,
-    default: 'USD',
+    default: 'EGP',
     uppercase: true
   },
   
   method: {
     type: String,
-    enum: ['card', 'wallet', 'qr_code'],
+    enum: PAYMENT_METHODS,
     required: true
   },
   
   status: {
     type: String,
-    enum: ['pending', 'processing', 'succeeded', 'failed', 'refunded', 'cancelled'],
-    default: 'pending',
+    enum: PAYMENT_STATUSES,
+    default: 'received',
     index: true
+  },
+
+  provider: {
+    type: String,
+    enum: ['vodafone_cash', 'etisalat_cash', 'instapay', null],
+    default: null
+  },
+
+  senderPhone: {
+    type: String,
+    index: true
+  },
+
+  senderName: {
+    type: String
+  },
+
+  smsTimestamp: {
+    type: Date
+  },
+
+  rawMessage: {
+    type: String
   },
   
   cardDetails: {
@@ -79,7 +135,7 @@ const paymentSchema = new mongoose.Schema({
   
   metadata: {
     type: Map,
-    of: String
+    of: mongoose.Schema.Types.Mixed
     // Additional data from payment gateway
   },
   
@@ -93,8 +149,10 @@ const paymentSchema = new mongoose.Schema({
 
 // Indexes
 paymentSchema.index({ order: 1 });
-paymentSchema.index({ transactionId: 1 }, { unique: true, sparse: true });
-paymentSchema.index({ status: 1 });
+paymentSchema.index({ provider: 1, senderPhone: 1, amount: 1, smsTimestamp: 1 });
 paymentSchema.index({ createdAt: -1 });
+
+paymentSchema.statics.PAYMENT_METHODS = PAYMENT_METHODS;
+paymentSchema.statics.PAYMENT_STATUSES = PAYMENT_STATUSES;
 
 module.exports = mongoose.model('Payment', paymentSchema);

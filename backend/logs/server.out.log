@@ -1,0 +1,47 @@
+
+> smartvend-backend@1.0.0 start
+> node server.js
+
+[36m
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   🥤 SmartVend Backend Server                             ║
+║                                                           ║
+║   Server running in development mode                    ║
+║   Port: 5000                                              ║
+║                                                           ║
+║   API Base URL: http://localhost:5000/api/v1              ║
+║   Health Check: http://localhost:5000/health              ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+  [39m
+[1m[4m[36mMongoDB Connected: localhost[39m[24m[22m
+[0mGET /health [32m200[0m 3.105 ms - 120[0m
+[0mGET /api/v1/categories [32m200[0m 28.902 ms - 1569[0m
+[0mGET /api/v1/cart?machineId=VM-4029 [32m200[0m 9.515 ms - 153[0m
+[0mGET /api/v1/products?machineId=VM-4029&limit=100 [32m200[0m 32.113 ms - 15671[0m
+[0mGET /health [32m200[0m 0.261 ms - 120[0m
+[31mError: Unsupported wallet provider
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\controllers\paymentController.js:188:17
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\utils\asyncHandler.js:7:19
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:15:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15[39m
+[0mPOST /api/v1/payments/wallet-notifications [33m400[0m 1.856 ms - 1537[0m
+[31mError: Invalid mobile API key
+    at authenticateMobileApp (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\middleware\authenticateMobileApp.js:12:17)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\Castiel\Desktop\Smart-Vending-Machine-Web-Site\backend\node_modules\express\lib\router\index.js:47:12)[39m
+[0mPOST /api/v1/payments/wallet-notifications [33m401[0m 1.639 ms - 1581[0m

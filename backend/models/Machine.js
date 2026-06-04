@@ -123,16 +123,13 @@ const machineSchema = new mongoose.Schema({
   }
   
 }, {
-  timestamps: true
+  timestamps: true,
+  suppressReservedKeysWarning: true
 });
 
 // Method to check if machine is available
 machineSchema.methods.isAvailable = function() {
   return this.status === 'online' && this.isOperational;
 };
-
-// Indexes
-machineSchema.index({ machineId: 1 }, { unique: true });
-machineSchema.index({ status: 1 });
 
 module.exports = mongoose.model('Machine', machineSchema);

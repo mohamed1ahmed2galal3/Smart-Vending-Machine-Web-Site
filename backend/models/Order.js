@@ -1,6 +1,37 @@
 const mongoose = require('mongoose');
 const { generatePickupCode } = require('../utils/generateCode');
 
+const ORDER_STATUSES = [
+  'pending_payment',
+  'cancelled',
+  'declined',
+  'ready_to_dispense',
+  'dispensing',
+  'dispensed',
+  'dispense_failed',
+  'refunded'
+];
+
+const PAYMENT_STATUSES = [
+  'pending',
+  'partial',
+  'paid',
+  'insufficient',
+  'failed',
+  'refunded',
+  'cancelled'
+];
+
+const PAYMENT_METHODS = [
+  'vodafone_cash',
+  'etisalat_cash',
+  'instapay',
+  'account_balance',
+  'card',
+  'wallet',
+  'qr_code'
+];
+
 const orderItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
@@ -60,13 +91,24 @@ const orderSchema = new mongoose.Schema({
   pickupCode: {
     type: String,
     unique: true,
+    sparse: true,
     index: true
-    // Auto-generated in pre-save hook
+    // Generated only after payment is accepted
   },
   
   // When the pickup code expires (e.g., 24 hours after payment)
   pickupCodeExpiresAt: {
     type: Date
+  },
+
+  pickupCodeUsedAt: {
+    type: Date
+  },
+
+  paymentDeadlineAt: {
+    type: Date,
+    default: () => new Date(Date.now() + 5 * 60 * 1000),
+    index: true
   },
   
   sessionId: {
@@ -94,7 +136,7 @@ const orderSchema = new mongoose.Schema({
   
   taxRate: {
     type: Number,
-    default: 0.08
+    default: 0
   },
   
   tax: {
@@ -106,24 +148,48 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+
+  amountPaid: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+
+  balanceApplied: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+
+  balanceCredited: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
   
   status: {
     type: String,
-    enum: ['pending', 'paid', 'dispensing', 'completed', 'failed', 'refunded', 'cancelled'],
-    default: 'pending',
+    enum: ORDER_STATUSES,
+    default: 'pending_payment',
     index: true
   },
   
   paymentStatus: {
     type: String,
-    enum: ['pending', 'processing', 'paid', 'failed', 'refunded'],
+    enum: PAYMENT_STATUSES,
     default: 'pending'
   },
   
   paymentMethod: {
     type: String,
-    enum: ['card', 'wallet', 'qr_code'],
+    enum: PAYMENT_METHODS,
     required: true
+  },
+
+  paymentProvider: {
+    type: String,
+    enum: ['vodafone_cash', 'etisalat_cash', 'instapay', null],
+    default: null
   },
   
   paymentId: {
@@ -152,6 +218,18 @@ const orderSchema = new mongoose.Schema({
   completedAt: {
     type: Date
   },
+
+  readyAt: {
+    type: Date
+  },
+
+  cancelledAt: {
+    type: Date
+  },
+
+  declinedAt: {
+    type: Date
+  },
   
   failureReason: {
     type: String
@@ -164,6 +242,11 @@ const orderSchema = new mongoose.Schema({
   
   customerPhone: {
     type: String
+  },
+
+  payerPhone: {
+    type: String,
+    index: true
   },
   
   receiptSent: {
@@ -182,8 +265,8 @@ orderSchema.pre('save', async function(next) {
     this.orderNumber = String(80000 + count + 1);
   }
   
-  // Generate pickup code if not exists
-  if (!this.pickupCode) {
+  // Generate pickup code only after the order is actually ready to dispense.
+  if (this.status === 'ready_to_dispense' && this.paymentStatus === 'paid' && !this.pickupCode) {
     let code;
     let isUnique = false;
     
@@ -192,7 +275,7 @@ orderSchema.pre('save', async function(next) {
       code = generatePickupCode();
       const existingOrder = await this.constructor.findOne({ 
         pickupCode: code,
-        status: { $nin: ['completed', 'cancelled', 'refunded', 'failed'] }
+        status: { $nin: ['dispensed', 'cancelled', 'refunded', 'declined', 'dispense_failed'] }
       });
       if (!existingOrder) {
         isUnique = true;
@@ -200,7 +283,8 @@ orderSchema.pre('save', async function(next) {
     }
     
     this.pickupCode = code;
-    // Pickup code valid for 24 hours after creation
+    this.readyAt = this.readyAt || new Date();
+    // Pickup code valid for 24 hours after becoming ready.
     this.pickupCodeExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
   }
   
@@ -208,11 +292,15 @@ orderSchema.pre('save', async function(next) {
 });
 
 // Indexes
-orderSchema.index({ orderNumber: 1 }, { unique: true });
-orderSchema.index({ pickupCode: 1 });
 orderSchema.index({ machineId: 1, status: 1 });
 orderSchema.index({ sessionId: 1 });
+orderSchema.index({ payerPhone: 1, paymentProvider: 1, status: 1 });
+orderSchema.index({ paymentDeadlineAt: 1, status: 1 });
 orderSchema.index({ createdAt: -1 });
 orderSchema.index({ status: 1, paymentStatus: 1 });
+
+orderSchema.statics.ORDER_STATUSES = ORDER_STATUSES;
+orderSchema.statics.PAYMENT_STATUSES = PAYMENT_STATUSES;
+orderSchema.statics.PAYMENT_METHODS = PAYMENT_METHODS;
 
 module.exports = mongoose.model('Order', orderSchema);

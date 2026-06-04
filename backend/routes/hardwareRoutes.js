@@ -13,7 +13,8 @@ const {
 const authenticateHardware = require('../middleware/authenticateHardware');
 
 // Hardware routes - all require hardware authentication
-// Note: In development, you can bypass auth by setting HARDWARE_API_KEY in .env
+// Note: set HARDWARE_API_KEY in .env or apiKey on the Machine document.
+router.use(authenticateHardware);
 
 // Verify pickup code (6-digit code from user)
 router.post('/verify-code', verifyPickupCode);

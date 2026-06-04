@@ -120,13 +120,20 @@ const API = {
   
   // ==================== Orders ====================
   Orders: {
-    async create(paymentMethod = 'card') {
+    async create(paymentDetails = {}) {
+      const details = typeof paymentDetails === 'string'
+        ? { paymentMethod: paymentDetails }
+        : paymentDetails;
+
       return API.request('/orders', {
         method: 'POST',
         body: JSON.stringify({
           sessionId: getSessionId(),
           machineId: getMachineId(),
-          paymentMethod
+          paymentMethod: details.paymentMethod || details.paymentProvider || 'vodafone_cash',
+          paymentProvider: details.paymentProvider || details.provider,
+          customerPhone: details.customerPhone || details.payerPhone,
+          payerPhone: details.payerPhone || details.customerPhone
         })
       });
     },

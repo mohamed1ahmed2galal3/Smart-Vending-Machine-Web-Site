@@ -4,14 +4,17 @@ const router = express.Router();
 const {
   createPaymentIntent,
   processPayment,
+  ingestWalletTransaction,
   getPaymentStatus,
   handleWebhook,
   requestRefund
 } = require('../controllers/paymentController');
+const authenticateMobileApp = require('../middleware/authenticateMobileApp');
 
 // Payment routes
 router.post('/create-intent', createPaymentIntent);
 router.post('/process', processPayment);
+router.post('/wallet-notifications', authenticateMobileApp, ingestWalletTransaction);
 router.get('/:orderId/status', getPaymentStatus);
 router.post('/:orderId/refund', requestRefund);
 

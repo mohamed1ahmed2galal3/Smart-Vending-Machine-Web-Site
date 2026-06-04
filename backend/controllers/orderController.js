@@ -3,6 +3,8 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorResponse = require('../utils/errorResponse');
+const { cancelExpiredPendingOrders } = require('../utils/orderExpiry');
+const { normalizeEgyptianPhone } = require('../utils/phone');
 
 /**
  * @desc    Create new order
@@ -10,7 +12,16 @@ const ErrorResponse = require('../utils/errorResponse');
  * @access  Public
  */
 exports.createOrder = asyncHandler(async (req, res, next) => {
-  const { sessionId, machineId, items, paymentMethod, customerEmail, customerPhone } = req.body;
+  const {
+    sessionId,
+    machineId,
+    items,
+    paymentMethod,
+    paymentProvider,
+    customerEmail,
+    customerPhone,
+    payerPhone
+  } = req.body;
 
   if (!machineId) {
     return next(new ErrorResponse('Machine ID is required', 400));
@@ -18,6 +29,14 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
 
   if (!paymentMethod) {
     return next(new ErrorResponse('Payment method is required', 400));
+  }
+
+  const normalizedPaymentMethod = paymentProvider || paymentMethod;
+  const normalizedPayerPhone = normalizeEgyptianPhone(payerPhone || customerPhone);
+  const walletProviders = ['vodafone_cash', 'etisalat_cash', 'instapay'];
+
+  if (walletProviders.includes(normalizedPaymentMethod) && !normalizedPayerPhone) {
+    return next(new ErrorResponse('Payer phone is required for wallet payments', 400));
   }
 
   // Get items from cart or request body
@@ -103,10 +122,14 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     taxRate,
     tax,
     total,
-    paymentMethod,
+    paymentMethod: normalizedPaymentMethod,
+    paymentProvider: paymentProvider || (
+      ['vodafone_cash', 'etisalat_cash', 'instapay'].includes(paymentMethod) ? paymentMethod : null
+    ),
     customerEmail,
     customerPhone,
-    status: 'pending',
+    payerPhone: normalizedPayerPhone,
+    status: 'pending_payment',
     paymentStatus: 'pending'
   });
 
@@ -115,16 +138,19 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     data: {
       _id: order._id,
       orderNumber: order.orderNumber,
-      pickupCode: order.pickupCode,
-      pickupCodeExpiresAt: order.pickupCodeExpiresAt,
       machineId: order.machineId,
       items: order.items,
       subtotal: order.subtotal,
       tax: order.tax,
       total: order.total,
+      amountPaid: order.amountPaid,
+      balanceApplied: order.balanceApplied,
+      balanceCredited: order.balanceCredited,
       status: order.status,
       paymentStatus: order.paymentStatus,
       paymentMethod: order.paymentMethod,
+      paymentProvider: order.paymentProvider,
+      paymentDeadlineAt: order.paymentDeadlineAt,
       createdAt: order.createdAt
     }
   });
@@ -136,6 +162,8 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
  * @access  Public
  */
 exports.getOrder = asyncHandler(async (req, res, next) => {
+  await cancelExpiredPendingOrders({ _id: req.params.orderId });
+
   const order = await Order.findById(req.params.orderId)
     .populate('items.product', 'name price image');
 
@@ -155,6 +183,8 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
  * @access  Public
  */
 exports.getOrderByNumber = asyncHandler(async (req, res, next) => {
+  await cancelExpiredPendingOrders();
+
   const order = await Order.findOne({ orderNumber: req.params.orderNumber })
     .populate('items.product', 'name price image');
 
@@ -174,8 +204,10 @@ exports.getOrderByNumber = asyncHandler(async (req, res, next) => {
  * @access  Public
  */
 exports.getOrderStatus = asyncHandler(async (req, res, next) => {
+  await cancelExpiredPendingOrders({ _id: req.params.orderId });
+
   const order = await Order.findById(req.params.orderId)
-    .select('orderNumber status paymentStatus dispensingStatus dispensingProgress pickupCode pickupCodeExpiresAt');
+    .select('orderNumber status paymentStatus dispensingStatus dispensingProgress pickupCode pickupCodeExpiresAt paymentDeadlineAt amountPaid balanceApplied balanceCredited total');
 
   if (!order) {
     return next(new ErrorResponse('Order not found', 404));
@@ -184,20 +216,26 @@ exports.getOrderStatus = asyncHandler(async (req, res, next) => {
   // Determine status message
   let message = '';
   switch (order.status) {
-    case 'pending':
+    case 'pending_payment':
       message = 'Awaiting payment...';
       break;
-    case 'paid':
+    case 'ready_to_dispense':
       message = 'Payment successful! Use your pickup code on the machine.';
       break;
     case 'dispensing':
       message = 'Dispensing your items...';
       break;
-    case 'completed':
+    case 'dispensed':
       message = 'Order completed. Please collect your items!';
       break;
-    case 'failed':
-      message = 'Order failed. Please contact support.';
+    case 'declined':
+      message = 'Payment was insufficient. The received amount was added to your account balance.';
+      break;
+    case 'cancelled':
+      message = 'Order cancelled because payment was not received in time.';
+      break;
+    case 'dispense_failed':
+      message = 'Dispensing failed. Please contact support.';
       break;
     default:
       message = 'Processing...';
@@ -210,11 +248,16 @@ exports.getOrderStatus = asyncHandler(async (req, res, next) => {
     paymentStatus: order.paymentStatus,
     dispensingStatus: order.dispensingStatus,
     dispensingProgress: order.dispensingProgress,
+    total: order.total,
+    amountPaid: order.amountPaid,
+    balanceApplied: order.balanceApplied,
+    balanceCredited: order.balanceCredited,
+    paymentDeadlineAt: order.paymentDeadlineAt,
     message
   };
 
-  // Include pickup code only if payment is successful
-  if (order.paymentStatus === 'paid') {
+  // Include pickup code only if payment is successful and the order is ready.
+  if (order.paymentStatus === 'paid' && order.status === 'ready_to_dispense') {
     response.pickupCode = order.pickupCode;
     response.pickupCodeExpiresAt = order.pickupCodeExpiresAt;
   }
@@ -231,6 +274,8 @@ exports.getOrderStatus = asyncHandler(async (req, res, next) => {
  * @access  Public
  */
 exports.getOrdersBySession = asyncHandler(async (req, res, next) => {
+  await cancelExpiredPendingOrders({ sessionId: req.params.sessionId });
+
   const orders = await Order.find({ sessionId: req.params.sessionId })
     .sort({ createdAt: -1 });
 
@@ -253,12 +298,14 @@ exports.cancelOrder = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Order not found', 404));
   }
 
-  // Can only cancel pending orders
-  if (order.status !== 'pending') {
+  // Can only cancel orders still waiting for payment.
+  if (order.status !== 'pending_payment') {
     return next(new ErrorResponse('Cannot cancel order in current status', 400));
   }
 
   order.status = 'cancelled';
+  order.paymentStatus = 'cancelled';
+  order.cancelledAt = new Date();
   await order.save();
 
   res.status(200).json({
@@ -283,9 +330,11 @@ exports.getMultipleOrders = asyncHandler(async (req, res, next) => {
   // Limit to prevent abuse
   const limitedIds = orderIds.slice(0, 50);
 
+  await cancelExpiredPendingOrders({ _id: { $in: limitedIds } });
+
   const orders = await Order.find({ _id: { $in: limitedIds } })
     .sort({ createdAt: -1 })
-    .select('orderNumber pickupCode pickupCodeExpiresAt status paymentStatus dispensingStatus items total createdAt machineId');
+    .select('orderNumber pickupCode pickupCodeExpiresAt paymentDeadlineAt status paymentStatus dispensingStatus items total amountPaid balanceApplied balanceCredited createdAt machineId');
 
   res.status(200).json({
     success: true,
@@ -306,12 +355,12 @@ exports.regeneratePickupCode = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Order not found', 404));
   }
 
-  // Only allow code regeneration for paid orders that haven't been dispensed
-  if (order.paymentStatus !== 'paid') {
-    return next(new ErrorResponse('Order must be paid to regenerate code', 400));
+  // Only allow code regeneration for ready orders that haven't been dispensed.
+  if (order.paymentStatus !== 'paid' || order.status !== 'ready_to_dispense') {
+    return next(new ErrorResponse('Order must be ready to dispense to regenerate code', 400));
   }
 
-  if (order.dispensingStatus === 'completed' || order.status === 'completed') {
+  if (order.dispensingStatus === 'completed' || order.status === 'dispensed') {
     return next(new ErrorResponse('Order has already been dispensed', 400));
   }
 
@@ -325,7 +374,7 @@ exports.regeneratePickupCode = asyncHandler(async (req, res, next) => {
     const existingOrder = await Order.findOne({ 
       pickupCode: newCode,
       _id: { $ne: order._id },
-      status: { $nin: ['completed', 'cancelled', 'refunded', 'failed'] }
+      status: { $nin: ['dispensed', 'cancelled', 'refunded', 'declined', 'dispense_failed'] }
     });
     if (!existingOrder) {
       isUnique = true;
