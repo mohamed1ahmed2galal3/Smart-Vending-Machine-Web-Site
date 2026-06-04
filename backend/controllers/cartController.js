@@ -28,7 +28,7 @@ exports.getCart = asyncHandler(async (req, res, next) => {
         items: [],
         subtotal: 0,
         tax: 0,
-        taxRate: 0.08,
+        taxRate: 0,
         total: 0,
         itemCount: 0
       }

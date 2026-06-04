@@ -1,9 +1,25 @@
 /**
  * SmartVend Frontend Configuration
  */
+function getApiBaseUrl() {
+  const override = localStorage.getItem('smartvend_api_base_url');
+  if (override) return override;
+
+  const host = window.location.hostname;
+  const isLocalFile = window.location.protocol === 'file:';
+  const isLocalHost = !host || host === 'localhost' || host === '127.0.0.1';
+
+  if (isLocalFile || isLocalHost) {
+    return 'http://localhost:5000/api/v1';
+  }
+
+  return `${window.location.protocol}//${host}:5000/api/v1`;
+}
+
 const CONFIG = {
-  // API Base URL - change this for production
-  API_BASE_URL: 'http://localhost:5000/api/v1',
+  // API Base URL. Override in browser console with:
+  // localStorage.setItem('smartvend_api_base_url', 'http://YOUR_PC_IP:5000/api/v1')
+  API_BASE_URL: getApiBaseUrl(),
   
   // Default machine ID (can be overridden by URL parameter)
   DEFAULT_MACHINE_ID: 'VM-4029',
